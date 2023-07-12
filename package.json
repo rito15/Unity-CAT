@@ -1,0 +1,16 @@
+{
+	"name" : "com.rito.cat",
+	"version": "1.0.0",
+	"displayName" :"Rito CAT 2023",
+	"description" :"Unity Custom Attributes",
+	"unity": "2021.3",
+	"dependencies": {},
+	"keywords": ["rito","unity","attribute"],
+	"author":
+	{
+		"name":"Rito",
+		"email":"atsrito@gmail.com",
+		"url":"https://github.com/rito15"
+	},
+	"category": "Unity"
+}
