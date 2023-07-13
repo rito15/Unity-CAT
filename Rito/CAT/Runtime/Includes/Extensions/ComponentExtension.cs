@@ -64,8 +64,7 @@ namespace Rito.CAT
         }
 
         // 2023. 07. 12. Pass
-        // TODO: 현재는 일단 모든 자식들 다 가져오고, 추가 선형 탐색으로 컴포넌트 찾는 방식 -> 비효율적
-        // 개선: DFS or BFS -> 타겟 컴포넌트를 찾으면 바로 리턴
+        // 2023. 07. 13. DFS로 변경
         /// <summary>
         /// <para/> 자신: 포함
         /// <para/> 자식: 포함
@@ -73,18 +72,28 @@ namespace Rito.CAT
         /// </summary>
         public static Component Ex_GetComponentInAllChildren(this Component @this, Type targetType)
         {
-            List<Transform> childrenTrList = new List<Transform>();
-            Recur_GetAllChildrenTransform(childrenTrList, @this.transform);
+            return LocalRecurFunc(@this.transform, targetType);
 
-            foreach (var tr in childrenTrList)
+            static Component LocalRecurFunc(Transform tr, Type targetType)
             {
                 var found = tr.GetComponent(targetType);
                 if (found != null)
                     return found;
+
+                int childCount = tr.childCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    found = LocalRecurFunc(tr.GetChild(i), targetType);
+                    if (found != null)
+                        return found;
+                }
+
+                return null;
             }
-            return null;
         }
+
         // 2023. 07. 12. Pass
+        // 2023. 07. 13. DFS로 변경
         /// <summary>
         /// <para/> 자신: 제외
         /// <para/> 자식: 포함
@@ -92,28 +101,28 @@ namespace Rito.CAT
         /// </summary>
         public static Component Ex_GetComponentInAllChildrenOnly(this Component @this, Type targetType)
         {
-            List<Transform> childrenTrList = new List<Transform>();
-            Recur_GetAllChildrenTransform(childrenTrList, @this.transform);
+            return LocalRecurFunc(@this.transform, targetType);
 
-            foreach (var tr in childrenTrList)
+            static Component LocalRecurFunc(Transform tr, Type targetType)
             {
-                if (tr == @this.transform) continue; // 자신 트랜스폼 제외
+                int childCount = tr.childCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    Transform child = tr.GetChild(i);
+                    var found = child.GetComponent(targetType);
 
-                var found = tr.GetComponent(targetType);
-                if (found != null)
-                    return found;
-            }
-            return null;
-        }
-        public static void Recur_GetAllChildrenTransform(List<Transform> trList, Transform tr)
-        {
-            trList.Add(tr);
-            int childCount = tr.childCount;
-            for (int i = 0; i < childCount; i++)
-            {
-                Recur_GetAllChildrenTransform(trList, tr.GetChild(i));
+                    if (found != null)
+                        return found;
+
+                    found = LocalRecurFunc(child, targetType);
+                    if (found != null)
+                        return found;
+                }
+
+                return null;
             }
         }
+
 
         // 2023. 07. 12. Pass
         /// <summary>

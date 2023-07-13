@@ -78,74 +78,14 @@ namespace Rito.CAT.Drawer
                 property.objectReferenceValue == null ||
                 property.objectReferenceValue.GetType().Ex_IsChildOrEqualsTo(fieldType) == false;
 
-            UnityEngine.Object foundTarget = null;
+            UnityEngine.Object foundTarget;
+            string includeDisabled = Atr.IncludeDisabledObject ? " (+ Disabled)" : "";
 
             {
                 Component @this = property.serializedObject.targetObject as Component;
-                bool isMyGameObjEnabled  = @this.gameObject.activeInHierarchy;
-                bool isMyGameObjDisabled = !isMyGameObjEnabled;
 
-                switch (Atr.Option)
-                {
-                    // 2023. 07. 12. Pass
-                    case EInjection.GetComponent:
-                        // 본인 스스로가 타겟이므로, 자신이 비활성화 상태면 동작 X
-                        if (!Atr.IncludeDisabledObject && isMyGameObjDisabled) break;
-
-                        foundTarget = @this.GetComponent(fieldType);
-                        break;
-
-                    // 2023. 07. 12. Pass
-                    // 본인 + 자식
-                    case EInjection.GetComponentInChildren:
-                        foundTarget =
-                            Atr.IncludeDisabledObject ? 
-                                @this.Ex_GetComponentInAllChildren(fieldType) :
-                                @this.Ex_GetComponentInChildrenIfEnabled(fieldType)
-                        ;
-                        break;
-
-                    // 2023. 07. 12. Pass
-                    // 자식만
-                    case EInjection.GetComponentInChildrenOnly:
-                        foundTarget =
-                            Atr.IncludeDisabledObject ?
-                                @this.Ex_GetComponentInAllChildrenOnly(fieldType) :
-                                @this.Ex_GetComponentInChildrenOnlyIfEnabled(fieldType)
-                        ;
-                        break;
-
-                    case EInjection.GetComponentInParents:
-                        foundTarget =
-                            Atr.IncludeDisabledObject ?
-                                @this.Ex_GetComponentInParentsEvenDisabled(fieldType) :
-                                @this.GetComponentInParent(fieldType)
-                        ;
-                        break;
-
-                    case EInjection.GetComponentInParentsOnly:
-                        foundTarget =
-                            Atr.IncludeDisabledObject ?
-                                @this.Ex_GetComponentInParentsOnlyEvenDisabled(fieldType) :
-                                @this.Ex_GetComponentInParentsOnly(fieldType)
-                        ;
-                        break;
-
-                    // TODO: 활성/비활성 구분하여 구현
-                    // TODO: 활성/비활성 구분하여 구현
-                    // TODO: 활성/비활성 구분하여 구현
-                    // TODO: 활성/비활성 구분하여 구현
-                    // TODO: 활성/비활성 구분하여 구현
-                    // TODO: 활성/비활성 구분하여 구현
-                    // TODO: 활성/비활성 구분하여 구현
-                    // TODO: 활성/비활성 구분하여 구현
-                    // TODO: 활성/비활성 구분하여 구현
-                    // TODO: 활성/비활성 구분하여 구현
-                    case EInjection.FindObjectOfType:
-                        foundTarget = UnityEngine.Object.FindObjectOfType(fieldType);
-                        break;
-
-                } // switch
+                // Inject 수행
+                EditorAutoInjectHelper.Inject(@this, Atr, fieldType, out foundTarget);
 
                 // 업데이트 필수 대상
                 if (isUpdateRequired)
@@ -168,7 +108,7 @@ namespace Rito.CAT.Drawer
                 string foundObjName = foundTarget == null ? "Null" : foundTarget.name;
                 string dirtyText = isRefDirty ? $"[* {foundObjName}]" : "";
 
-                EditorHelper.ColorInfoBox(infoRectL, Color.green, $"{Atr.Option} {dirtyText}");
+                EditorHelper.ColorInfoBox(infoRectL, Color.green, $"{Atr.Option}{includeDisabled} {dirtyText}");
                 if (GUI.Button(infoRectR, "")) // 강제 리셋 버튼
                 {
                     property.objectReferenceValue = null;
@@ -177,7 +117,6 @@ namespace Rito.CAT.Drawer
             // 실행 결과 - 실패(대상이 없음)
             else
             {
-                string includeDisabled = Atr.IncludeDisabledObject ? " (Include Disabled)" : "";
                 EditorHelper.ColorWarningBox(infoRect, $"{Atr.Option}{includeDisabled} - Failed : 대상을 찾지 못했습니다");
             }
             EditorGUI.PropertyField(propRect, property, label, true);
