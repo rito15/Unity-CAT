@@ -219,16 +219,29 @@ namespace Rito.CAT.Drawer
 
         private void DrawTooltip(in Rect eventRect, string method, string nextName, bool isDirty)
         {
+            Rect GetBgRect(Rect rect)
+            {
+                rect.x -= 1f; rect.width += 2f; rect.y -= 1f; rect.height += 2f; return rect;
+            }
+
             Vector2 mPos =  Event.current.mousePosition;
+
+            // 스트링으로 너비 계산
+            const float WPad = 4f;
+            //float rWidth1 = GUI.skin.label.CalcSize(new GUIContent(method)).x + WPad;
+            const float rWidth1 = 200f;
+            float rWidth2 = GUI.skin.label.CalcSize(new GUIContent(nextName)).x + WPad;
 
             if (eventRect.Contains(mPos))
             {
                 Rect tooltipRect = new Rect(
                     eventRect.x + eventRect.width + 2f,
-                    eventRect.y - 2f,
-                    200f,
+                    eventRect.y - 4f,
+                    rWidth1,
                     eventRect.height + 4f
                 );
+
+                EditorGUI.DrawRect(GetBgRect(tooltipRect), Color.white);
                 EditorGUI.DrawRect(tooltipRect, Color.black);
 
                 var aln = GUI.skin.box.alignment;
@@ -245,11 +258,13 @@ namespace Rito.CAT.Drawer
                     //    tooltipRect;
                     //t2r.y = t2r.y - t2r.height + 4f;
                         new Rect(
-                        tooltipRect.x + tooltipRect.width,
+                        tooltipRect.x + tooltipRect.width + 4f,
                         tooltipRect.y,
-                        200f,
+                        rWidth2,
+                        //200f,
                         tooltipRect.height
                     );
+                    EditorGUI.DrawRect(GetBgRect(t2r), Color.white);
                     EditorGUI.DrawRect(t2r, Color.black);
 
                     Color c2 = GUI.color;
