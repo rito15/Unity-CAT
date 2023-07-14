@@ -171,7 +171,7 @@ namespace Rito.CAT.Drawer
                 // 실행 결과 - 할당 성공
                 if (property.objectReferenceValue != null)
                 {
-                    string foundObjName = foundTarget == null ? "Null" : foundTarget.name;
+                    string foundObjName = foundTarget == null ? "NULL" : foundTarget.name;
                     string dirtyText = isRefDirty ? $"[* {foundObjName}]" : "";
 
                     EditorHelper.ColorInfoBox(infoRectL, Color.green, $"{Atr.Option}{includeDisabled} {dirtyText}");
@@ -186,11 +186,13 @@ namespace Rito.CAT.Drawer
                     EditorHelper.ColorWarningBox(infoRect, $"{Atr.Option}{includeDisabled} - Failed : 대상을 찾지 못했습니다");
                 }
             }
+
+            Rect miniRect = default;
             // 동작은 하지만 데코는 안보여주는 경우
             if (isMiniDeco)
             {
                 const float MiniW = 20f;
-                Rect miniRect = new Rect(position.x - MiniW, position.y, MiniW, position.height);
+                miniRect = new Rect(position.x - MiniW, position.y, MiniW, position.height);
 
                 GUIContent icon =
                     isInjectionFailed ? IconRed : 
@@ -203,6 +205,61 @@ namespace Rito.CAT.Drawer
                 };
             }
             EditorGUI.PropertyField(propRect, property, label, true);
+
+
+            if (isMiniDeco)
+            {
+                DrawTooltip(miniRect, 
+                    $"{Atr.Option}{(Atr.IncludeDisabledObject ? " [D]" : "")}",
+                    foundTarget == null ? "=> NULL" : $"=> {foundTarget.name}",
+                    isRefDirty
+                );
+            }
+        }
+
+        private void DrawTooltip(in Rect eventRect, string method, string nextName, bool isDirty)
+        {
+            Vector2 mPos =  Event.current.mousePosition;
+
+            if (eventRect.Contains(mPos))
+            {
+                Rect tooltipRect = new Rect(
+                    eventRect.x + eventRect.width + 2f,
+                    eventRect.y - 2f,
+                    200f,
+                    eventRect.height + 4f
+                );
+                EditorGUI.DrawRect(tooltipRect, Color.black);
+
+                var aln = GUI.skin.box.alignment;
+                GUI.skin.box.alignment = TextAnchor.MiddleLeft;
+
+                Color c = GUI.color;
+                GUI.color = Color.cyan;
+                GUI.Box(tooltipRect, method);
+                GUI.color = c;
+
+                if (isDirty)
+                {
+                    Rect t2r = 
+                    //    tooltipRect;
+                    //t2r.y = t2r.y - t2r.height + 4f;
+                        new Rect(
+                        tooltipRect.x + tooltipRect.width,
+                        tooltipRect.y,
+                        200f,
+                        tooltipRect.height
+                    );
+                    EditorGUI.DrawRect(t2r, Color.black);
+
+                    Color c2 = GUI.color;
+                    GUI.color = Color.yellow;
+                    GUI.Box(t2r, nextName);
+                    GUI.color = c2;
+                }
+
+                GUI.skin.box.alignment = aln;
+            }
         }
 
         private void DrawPlayModeGUI(Rect position, SerializedProperty property, GUIContent label)
