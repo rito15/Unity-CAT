@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 383584957}
   - component: {fileID: 383584958}
   m_Layer: 0
-  m_Name: AutoInject 2
+  m_Name: EditorDI 02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -519,7 +519,7 @@ GameObject:
   m_Component:
   - component: {fileID: 984259330}
   m_Layer: 0
-  m_Name: AutoInject Root
+  m_Name: EditorDI Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -817,7 +817,7 @@ GameObject:
   - component: {fileID: 1326400289}
   - component: {fileID: 1326400290}
   m_Layer: 0
-  m_Name: AutoInject
+  m_Name: EditorDI 01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

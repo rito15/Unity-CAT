@@ -7,18 +7,18 @@ namespace Rito.CAT.Demo
 {
     // 2023-07-13
     // 작성자 : Rito
-    public class Demo_EditorAutoInjectGetComChild : MonoBehaviour
+    public class Demo_EditorDIGetComChild : MonoBehaviour
     {
-        [EditorAutoInject(EInjection.GetComponentInChildren)]
+        [EditorDI(DiMethod.GetComponentInChildren)]
         public CapsuleCollider _getCInChildren; // 자신
 
-        [EditorAutoInject(EInjection.GetComponentInChildrenOnly)]
+        [EditorDI(DiMethod.GetComponentInChildrenOnly)]
         public CapsuleCollider _getCInChildrenOnly; // 자식
 
-        [EditorAutoInject(EInjection.GetComponentInChildren, injectEvenDisabled: true)]
+        [EditorDI(DiMethod.GetComponentInChildren, injectEvenDisabled: true)]
         public BoxCollider _getCInChildrenEvenDisabled; // 자식
 
-        [EditorAutoInject(EInjection.GetComponentInChildrenOnly, injectEvenDisabled: true)]
+        [EditorDI(DiMethod.GetComponentInChildrenOnly, injectEvenDisabled: true)]
         public BoxCollider _getCInChildrenOnlyEvenDisabled; // 자식
     }
 }

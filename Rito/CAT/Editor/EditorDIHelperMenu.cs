@@ -11,12 +11,12 @@ using System.Linq;
 namespace Rito.CAT
 {
     // 2023-07-13
-    public static class EditorAutoInjectHelperMenu
+    public static class EditorDIHelperMenu
     {
         private const BindingFlags FIELD_FLAGS = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
         private static List<MonoBehaviour> injectables = new List<MonoBehaviour>(256);
 
-        [MenuItem("Rito/EditorAutoInjector/Force Update Now")]
+        [MenuItem("Rito/Editor DI/Force Update Now")]
         private static void ForceRunInjector()
         {
             ScanSceneForInjectables();
@@ -46,7 +46,7 @@ namespace Rito.CAT
                     Type type = script.GetType();
                     FieldInfo[] fields = type.GetFields(FIELD_FLAGS);
 
-                    if (fields.Any(field => Attribute.IsDefined(field, typeof(EditorAutoInjectAttribute))))
+                    if (fields.Any(field => Attribute.IsDefined(field, typeof(EditorDIAttribute))))
                     {
                         injectables.Add(script);
                     }
@@ -74,7 +74,7 @@ namespace Rito.CAT
                     Type ftype = fcom.GetType();
 
                     // EditorAutoInject 애트리뷰트가 선언되어 있는지 검사
-                    if (Attribute.IsDefined(finfo, typeof(EditorAutoInjectAttribute)))
+                    if (Attribute.IsDefined(finfo, typeof(EditorDIAttribute)))
                     {
                         if (!ftype.Ex_IsChildOrEqualsTo(typeof(Component))) continue;
                         sp.objectReferenceValue = null;
@@ -102,12 +102,12 @@ namespace Rito.CAT
                 {
                     Type ftype = finfo.FieldType;
 
-                    if (Attribute.IsDefined(finfo, typeof(EditorAutoInjectAttribute)))
+                    if (Attribute.IsDefined(finfo, typeof(EditorDIAttribute)))
                     {
                         if (!ftype.Ex_IsChildOrEqualsTo(typeof(Component))) continue;
 
-                        EditorAutoInjectAttribute atr = finfo.GetCustomAttribute<EditorAutoInjectAttribute>();
-                        EditorAutoInjectHelper.InjectByTr(tr, atr, ftype, out UnityEngine.Object resObj);
+                        EditorDIAttribute atr = finfo.GetCustomAttribute<EditorDIAttribute>();
+                        EditorDIHelper.InjectByTr(tr, atr, ftype, out UnityEngine.Object resObj);
 
                         finfo.SetValue(mono, resObj); // 강제로 상태 업데이트하여 인젝션 수행
                     }
@@ -164,12 +164,12 @@ namespace Rito.CAT
                     Type ftype = fcom.GetType();
 
                     // EditorAutoInject 애트리뷰트가 선언되어 있는지 검사
-                    if (Attribute.IsDefined(finfo, typeof(EditorAutoInjectAttribute)))
+                    if (Attribute.IsDefined(finfo, typeof(EditorDIAttribute)))
                     {
                         if (!ftype.Ex_IsChildOrEqualsTo(typeof(Component))) continue;
 
-                        EditorAutoInjectAttribute atr = finfo.GetCustomAttribute<EditorAutoInjectAttribute>();
-                        EditorAutoInjectHelper.InjectByTr(tr, atr, ftype, out UnityEngine.Object resObj);
+                        EditorDIAttribute atr = finfo.GetCustomAttribute<EditorDIAttribute>();
+                        EditorDIHelper.InjectByTr(tr, atr, ftype, out UnityEngine.Object resObj);
 
                         // 강제로 상태 업데이트하여 인젝션 수행
                         //sp.objectReferenceValue = resObj != null ? resObj : null;

@@ -9,10 +9,10 @@ namespace Rito.CAT.Drawer
     /// <para/> 2020-05-18 PM 9:15:30
     /// <para/> Component 상속 타입 변수들에 자동으로 초기화
     /// </summary>
-    [CustomPropertyDrawer(typeof(EditorAutoInjectAttribute), true)]
-    public class EditorAutoInjectAttributeDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(EditorDIAttribute), true)]
+    public class EditorDIAttributeDrawer : PropertyDrawer
     {
-        EditorAutoInjectAttribute Atr => attribute as EditorAutoInjectAttribute;
+        EditorDIAttribute Atr => attribute as EditorDIAttribute;
 
         private float Height { get; set; } =
 #if UNITY_2019_3_OR_NEWER
@@ -85,7 +85,7 @@ namespace Rito.CAT.Drawer
                 Component @this = property.serializedObject.targetObject as Component;
 
                 // Inject 수행
-                EditorAutoInjectHelper.Inject(@this, Atr, fieldType, out foundTarget);
+                EditorDIHelper.Inject(@this, Atr, fieldType, out foundTarget);
 
                 // 업데이트 필수 대상
                 if (isUpdateRequired)

@@ -6,12 +6,12 @@ namespace Rito.CAT.Demo
 {
     // 2023-07-13
     // 작성자 : Rito
-    public class Demo_EditorAutoInjectFindObj : MonoBehaviour
+    public class Demo_EditorDItFindObj : MonoBehaviour
     {
-        [EditorAutoInject(EInjection.FindObjectOfType, injectEvenDisabled: false)]
+        [EditorDI(DiMethod.FindObjectOfType, injectEvenDisabled: false)]
         public UnityEngine.UI.Image _findObjOfType;
 
-        [EditorAutoInject(EInjection.FindObjectOfType, injectEvenDisabled: true)]
+        [EditorDI(DiMethod.FindObjectOfType, injectEvenDisabled: true)]
         public UnityEngine.UI.Image _findObjOfTypeEvenDisabled;
 
     }

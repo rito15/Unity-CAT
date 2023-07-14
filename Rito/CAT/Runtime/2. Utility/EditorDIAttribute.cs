@@ -9,9 +9,9 @@ namespace Rito.CAT
     /// <para/> 자신의 게임오브젝트 또는 컴포넌트가 비활성화 상태여도 기본적으로 동작합니다.
     /// </summary>
     [System.AttributeUsage(System.AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-    public class EditorAutoInjectAttribute : PropertyAttribute
+    public class EditorDIAttribute : PropertyAttribute
     {
-        public EInjection Option { get; private set; }
+        public DiMethod Option { get; private set; }
         //public EModeOption ModeOption { get; private set; } = EModeOption.Always;
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace Rito.CAT
         /// </summary>
         public bool IncludeDisabledObject { get; private set; }
 
-        public EditorAutoInjectAttribute(EInjection option, bool injectEvenDisabled = false)
+        public EditorDIAttribute(DiMethod option, bool injectEvenDisabled = false)
         {
             this.Option = option;
             this.IncludeDisabledObject = injectEvenDisabled;
@@ -29,7 +29,7 @@ namespace Rito.CAT
     }
 
     // 애트리뷰트에서 선택할 옵션
-    public enum EInjection
+    public enum DiMethod
     {
         GetComponent,
 
