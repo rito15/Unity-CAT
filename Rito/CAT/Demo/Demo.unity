@@ -479,7 +479,7 @@ GameObject:
   - component: {fileID: 899033457}
   - component: {fileID: 899033458}
   m_Layer: 0
-  m_Name: AutoInject Parent 1
+  m_Name: DI Parent 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1021,7 +1021,7 @@ GameObject:
   - component: {fileID: 1403145238}
   - component: {fileID: 1403145239}
   m_Layer: 0
-  m_Name: AutoInject Parent 2
+  m_Name: DI Parent 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -16,7 +16,57 @@ namespace Rito.CAT
         private const BindingFlags FIELD_FLAGS = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
         private static List<MonoBehaviour> injectables = new List<MonoBehaviour>(256);
 
-        [MenuItem("Rito/Editor DI/Force Update Now")]
+        private const string MenuItemRootName = "Rito/EditorDI/";
+
+        public static class ItemToggles
+        {
+            public struct OnOff
+            {
+                private const string MenuItemTitle = MenuItemRootName + "On";
+                public static bool Value
+                {
+                    get => EditorPrefs.GetBool(MenuItemTitle, true);
+                    private set => EditorPrefs.SetBool(MenuItemTitle, value);
+                }
+
+                [MenuItem(MenuItemTitle, false, priority = 101)]
+                private static void MenuItem()
+                {
+                    Value = !Value;
+                }
+
+                [MenuItem(MenuItemTitle, true, priority = 101)]
+                private static bool MenuItem_Validate()
+                {
+                    Menu.SetChecked(MenuItemTitle, Value);
+                    return true;
+                }
+            }
+            public struct ShowDeco
+            {
+                private const string MenuItemTitle = MenuItemRootName +  "Show Decorator";
+                public static bool Value
+                {
+                    get => EditorPrefs.GetBool(MenuItemTitle, true);
+                    private set => EditorPrefs.SetBool(MenuItemTitle, value);
+                }
+
+                [MenuItem(MenuItemTitle, false, priority = 102)]
+                private static void MenuItem()
+                {
+                    Value = !Value;
+                }
+
+                [MenuItem(MenuItemTitle, true, priority = 102)]
+                private static bool MenuItem_Validate()
+                {
+                    Menu.SetChecked(MenuItemTitle, Value);
+                    return true;
+                }
+            }
+        }
+
+        [MenuItem(MenuItemRootName + "Force Update Now", priority = 601)]
         private static void ForceRunInjector()
         {
             ScanSceneForInjectables();
