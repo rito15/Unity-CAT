@@ -404,7 +404,7 @@ namespace Rito.CAT.Drawer
             // 툴팁 글자 색상
             Color cMethod = nameIncludes != null ? Color.cyan : Color.green;
             Color cNameContains = (nameIncludes != null && foundComponent != null) ? 
-                (foundComponent.gameObject.activeInHierarchy ? Color.cyan : Color.yellow) : Color.red;
+                (foundComponent.gameObject.activeInHierarchy ? Color.white : Color.gray) : Color.red;
 
             Vector2 mPos =  Event.current.mousePosition;
 
