@@ -12,6 +12,8 @@ namespace Rito.CAT.Drawer
     [CustomPropertyDrawer(typeof(EditorDIAttribute), true)]
     public class EditorDIAttributeDrawer : PropertyDrawer
     {
+        #region Props
+
         EditorDIAttribute Atr => attribute as EditorDIAttribute;
 
         private float Height { get; set; } =
@@ -24,16 +26,18 @@ namespace Rito.CAT.Drawer
         private bool IsPlayMode => EditorApplication.isPlaying;
 
         private static bool IsFullDeco =>
-            EditorDIHelperMenu.ItemToggles.OnOff.Value &&
-            EditorDIHelperMenu.ItemToggles.ShowDeco.Value &&
-            EditorDIHelperMenu.ItemToggles.FullDeco.Value;
+            EditorDIPrefs.OnOff.Value &&
+            EditorDIPrefs.ShowDeco.Value &&
+            EditorDIPrefs.FullDeco.Value;
         private static bool IsMiniDeco =>
-            EditorDIHelperMenu.ItemToggles.OnOff.Value &&
-            EditorDIHelperMenu.ItemToggles.ShowDeco.Value &&
-            EditorDIHelperMenu.ItemToggles.FullDeco.Value == false;
+            EditorDIPrefs.OnOff.Value &&
+            EditorDIPrefs.ShowDeco.Value &&
+            EditorDIPrefs.FullDeco.Value == false;
         private static bool IsPreviewDeco =>
-            EditorDIHelperMenu.ItemToggles.OnOff.Value == false &&
-            EditorDIHelperMenu.ItemToggles.ShowDeco.Value;
+            EditorDIPrefs.OnOff.Value == false &&
+            EditorDIPrefs.ShowDeco.Value;
+
+        #endregion
 
         #region Icons
         private static GUIContent _iconGreen;
@@ -42,8 +46,26 @@ namespace Rito.CAT.Drawer
             get
             {
                 if (_iconGreen == null)
-                    _iconGreen = EditorGUIUtility.IconContent("winbtn_mac_max");
+                {
+                    //_iconGreen = EditorGUIUtility.IconContent("winbtn_mac_max");
+                    _iconGreen = EditorGUIUtility.IconContent("sv_icon_dot3_sml");
+                    //_iconGreen = EditorGUIUtility.IconContent("d_greenLight");
+                }
                 return _iconGreen;
+            }
+        }
+        private static GUIContent _iconCyan;
+        private static GUIContent IconCyan
+        {
+            get
+            {
+                if (_iconCyan == null)
+                {
+                    //_iconCyan = EditorGUIUtility.IconContent("winbtn_mac_max_h");
+                    _iconCyan = EditorGUIUtility.IconContent("sv_icon_dot2_sml");
+                    //_iconCyan = EditorGUIUtility.IconContent("sv_icon_dot10_sml");
+                }
+                return _iconCyan;
             }
         }
 
@@ -53,7 +75,11 @@ namespace Rito.CAT.Drawer
             get
             {
                 if (_iconYellow == null)
-                    _iconYellow = EditorGUIUtility.IconContent("winbtn_mac_min");
+                {
+                    //_iconYellow = EditorGUIUtility.IconContent("winbtn_mac_min");
+                    _iconYellow = EditorGUIUtility.IconContent("sv_icon_dot4_sml");
+                    //_iconYellow = EditorGUIUtility.IconContent("d_orangeLight");
+                }
                 return _iconYellow;
             }
         }
@@ -64,7 +90,11 @@ namespace Rito.CAT.Drawer
             get
             {
                 if (_iconRed == null)
-                    _iconRed = EditorGUIUtility.IconContent("winbtn_mac_close");
+                {
+                    //_iconRed = EditorGUIUtility.IconContent("winbtn_mac_close");
+                    _iconRed = EditorGUIUtility.IconContent("sv_icon_dot6_sml");
+                    //_iconRed = EditorGUIUtility.IconContent("d_redLight");
+                }
                 return _iconRed;
             }
         }
@@ -104,6 +134,8 @@ namespace Rito.CAT.Drawer
 
         #endregion
 
+        #region Editor GUI
+
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             if (IsPlayMode) return Height;
@@ -114,12 +146,16 @@ namespace Rito.CAT.Drawer
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             // 1. 동작하지 않음
-            if (IsPlayMode || EditorDIHelperMenu.ItemToggles.OnOff.Value == false)
+            if (IsPlayMode || EditorDIPrefs.OnOff.Value == false)
             {
-                if(IsPreviewDeco)
+                if (IsPreviewDeco)
+                {
                     DrawPreviewGUI(position, property, label);
+                }
                 else
+                {
                     EditorGUI.PropertyField(position, property, label, true);
+                }
             }
             // 2. DI 동작
             else
@@ -127,6 +163,8 @@ namespace Rito.CAT.Drawer
                 DrawInjectionGUI(position, property, label);
             }
         }
+
+        #endregion
 
         private void DrawPreviewGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -139,7 +177,7 @@ namespace Rito.CAT.Drawer
             //    ComponentHelper.FindComponentInScene_NC(fieldInfo.FieldType, Atr.NameIncludes, Atr.IncludeDisabledObject);
 
             Color bg = GUI.backgroundColor;
-            GUI.backgroundColor = new Color(1f, 1f, 1f, 0.1f);
+            GUI.backgroundColor = Atr.IncludeDisabledObject ? new Color(0.3f, 0.3f, 0.3f, 0.5f) : new Color(1f, 1f, 1f, 0.3f);
             GUI.Button(miniRect, Atr.NameIncludes == null ? IconPreviewWhite : IconPreviewCyan);
             GUI.backgroundColor = bg;
 
@@ -259,6 +297,7 @@ namespace Rito.CAT.Drawer
                 GUIContent icon =
                     isInjectionFailed ? IconRed : 
                     isRefDirty ? IconYellow : 
+                    Atr.NameIncludes != null ? IconCyan :
                     IconGreen;
 
                 Color oldCol = GUI.backgroundColor;
@@ -363,9 +402,9 @@ namespace Rito.CAT.Drawer
             string nameIncludes = Atr.NameIncludes;
 
             // 툴팁 글자 색상
-            Color cMethod = Color.cyan;
+            Color cMethod = nameIncludes != null ? Color.cyan : Color.green;
             Color cNameContains = (nameIncludes != null && foundComponent != null) ? 
-                (foundComponent.gameObject.activeInHierarchy ? Color.green : Color.yellow) : Color.red;
+                (foundComponent.gameObject.activeInHierarchy ? Color.cyan : Color.yellow) : Color.red;
 
             Vector2 mPos =  Event.current.mousePosition;
 

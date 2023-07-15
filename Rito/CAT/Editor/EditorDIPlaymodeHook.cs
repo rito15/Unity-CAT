@@ -1,19 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
+#if UNITY_EDITOR
+
+using UnityEditor;
 using UnityEngine;
 
-// TODO
-public class EditorDIPlaymodeHook : MonoBehaviour
+namespace Rito.CAT
 {
-    // Start is called before the first frame update
-    void Start()
+    // 플레이모드 시작 직전 동작
+    [InitializeOnLoad]
+    public class EditorDIPlaymodeHook
     {
-        
-    }
+        static EditorDIPlaymodeHook()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private static void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            if (EditorDIPrefs.AutoInjectBeforeEnteringPlaymode.Value == false) return;
+
+            switch (state)
+            {
+                case PlayModeStateChange.ExitingEditMode:
+                    EditorDIRunner.ForceRunInjector();
+                    Debug.Log("Rito.CAT.EditorDI: AutoInject now working...");
+                    break;
+                case PlayModeStateChange.EnteredPlayMode:
+                    Debug.Log("Rito.CAT.EditorDI: AutoInject just worked.");
+                    break;
+            }
+        }
     }
 }
+
+#endif
