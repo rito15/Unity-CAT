@@ -9,67 +9,12 @@ namespace Rito.CAT
 {
     public static class EditorDIHelper
     {
-        public static void InjectByTr(Transform tr, EditorDIAttribute atr, Type fieldType, out UnityEngine.Object found)
-        {
-            bool isMyGameObjDisabled = !tr.gameObject.activeInHierarchy;
-            found = null;
-
-            switch (atr.Option)
-            {
-                // 2023. 07. 12. Pass
-                case DiMethod.GetComponent:
-                    // 본인 스스로가 타겟이므로, 자신이 비활성화 상태면 동작 X
-                    if (!atr.IncludeDisabledObject && isMyGameObjDisabled) break;
-
-                    found = tr.GetComponent(fieldType);
-                    break;
-
-                // 2023. 07. 12. Pass
-                // 본인 + 자식
-                case DiMethod.GetComponentInChildren:
-                    found = atr.IncludeDisabledObject ?
-                            tr.Ex_GetComponentInAllChildren(fieldType) :
-                            tr.Ex_GetComponentInChildrenIfEnabled(fieldType);
-                    break;
-
-                // 2023. 07. 12. Pass
-                // 자식만
-                case DiMethod.GetComponentInChildrenOnly:
-                    found = atr.IncludeDisabledObject ?
-                            tr.Ex_GetComponentInAllChildrenOnly(fieldType) :
-                            tr.Ex_GetComponentInChildrenOnlyIfEnabled(fieldType);
-                    break;
-
-                // 2023. 07. 12. Pass
-                case DiMethod.GetComponentInParents:
-                    found = atr.IncludeDisabledObject ?
-                            tr.Ex_GetComponentInParentsEvenDisabled(fieldType) :
-                            tr.GetComponentInParent(fieldType);
-                    break;
-
-                // 2023. 07. 12. Pass
-                case DiMethod.GetComponentInParentsOnly:
-                    found = atr.IncludeDisabledObject ?
-                            tr.Ex_GetComponentInParentsOnlyEvenDisabled(fieldType) :
-                            tr.Ex_GetComponentInParentsOnly(fieldType);
-                    break;
-
-                // 2023. 07. 13. Pass
-                case DiMethod.FindObjectOfType:
-                    found = atr.IncludeDisabledObject ?
-                            ComponentHelper.GetComponentInAllObjectsInScene(fieldType) :
-                            UnityEngine.Object.FindObjectOfType(fieldType);
-                    break;
-
-            } // switch
-        }
-
         public static void Inject(Component comField, EditorDIAttribute atr, Type fieldType, out UnityEngine.Object found)
         {
             bool isMyGameObjDisabled = !comField.gameObject.activeInHierarchy;
             found = null;
 
-            switch (atr.Option)
+            switch (atr.Method)
             {
                 // 2023. 07. 12. Pass
                 case DiMethod.GetComponent:
@@ -112,8 +57,49 @@ namespace Rito.CAT
                 // 2023. 07. 13. Pass
                 case DiMethod.FindObjectOfType:
                     found = atr.IncludeDisabledObject ?
-                            ComponentHelper.GetComponentInAllObjectsInScene(fieldType) :
+                            ComponentHelper.FindComponentInScene(fieldType) :
                             UnityEngine.Object.FindObjectOfType(fieldType);
+                    break;
+
+            } // switch
+        }
+
+        // 게임오브젝트 이름 포함
+        public static void Inject_NC(Component comField, EditorDIAttribute atr, Type fieldType, 
+            string nameIncludes,
+            out UnityEngine.Object found
+        )
+        {
+            bool isMyGameObjDisabled = !comField.gameObject.activeInHierarchy;
+            found = null;
+
+            bool includeSelf =
+                atr.Method == DiMethod.FindObjectOfType ||
+                atr.Method == DiMethod.GetComponentInChildren ||
+                atr.Method == DiMethod.GetComponentInParents;
+            bool evenDisabled = atr.IncludeDisabledObject;
+
+            switch (atr.Method)
+            {
+                case DiMethod.GetComponent:
+                    // 본인 스스로가 타겟이므로, 자신이 비활성화 상태면 동작 X
+                    if (!atr.IncludeDisabledObject && isMyGameObjDisabled) break;
+
+                    found = comField.GetComponent(fieldType);
+                    break;
+
+                case DiMethod.GetComponentInChildren:
+                case DiMethod.GetComponentInChildrenOnly:
+                    found = comField.Ex_GetComponentInChildren_NC(fieldType, nameIncludes, includeSelf, evenDisabled);
+                    break;
+
+                case DiMethod.GetComponentInParents:
+                case DiMethod.GetComponentInParentsOnly:
+                    found = comField.Ex_GetComponentInParents_NC(fieldType, nameIncludes, includeSelf, evenDisabled);
+                    break;
+
+                case DiMethod.FindObjectOfType:
+                    found = ComponentHelper.FindComponentInScene_NC(fieldType, nameIncludes, evenDisabled);
                     break;
 
             } // switch

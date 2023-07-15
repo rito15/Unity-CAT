@@ -11,21 +11,27 @@ namespace Rito.CAT
     [System.AttributeUsage(System.AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public class EditorDIAttribute : PropertyAttribute
     {
-        public DiMethod Option { get; private set; }
+        public DiMethod Method { get; private set; }
         //public EModeOption ModeOption { get; private set; } = EModeOption.Always;
 
         /// <summary>
-        /// 비활성화된 오브젝트를 모두 탐색하여 인젝션
+        /// 비활성화된 오브젝트를 모두 탐색
         /// </summary>
         public bool IncludeDisabledObject { get; private set; }
 
-        public EditorDIAttribute(DiMethod option, bool injectEvenDisabled = false)
-        {
-            this.Option = option;
-            this.IncludeDisabledObject = injectEvenDisabled;
-        }
-        //public AutoInjectAttribute(EInjection option, EModeOption mode) : this(option) => ModeOption = mode;
+        /// <summary>
+        /// 게임오브젝트 이름에 해당 문자열이 포함되는 경우 탐색
+        /// </summary>
+        public string NameIncludes { get; private set; }
 
+        public EditorDIAttribute(DiMethod method, bool evenDisabled = true, string nameIncludes = null)
+        {
+            this.Method = method;
+            this.IncludeDisabledObject = evenDisabled;
+            this.NameIncludes = nameIncludes;
+        }
+
+        public EditorDIAttribute(DiMethod method, string nameIncludes) : this(method, true, nameIncludes) { }
     }
 
     // 애트리뷰트에서 선택할 옵션
@@ -47,9 +53,27 @@ namespace Rito.CAT
     }
 
     // 실행할 타이밍
-    public enum EModeOption
-    {
-        EditModeOnly,
-        //Always // TODO: 리플렉션 활용한 DI (GetComponentAttributes 라이브러리 사용)
-    }
+    //public enum EModeOption
+    //{
+    //    EditModeOnly,
+    //    //Always // TODO: 리플렉션 활용한 DI (GetComponentAttributes 라이브러리 사용)
+    //}
+
+    //public enum DiNameMethod
+    //{
+    //    None = 0,
+    //    Contains = 1,
+    //    Equals = 2,
+    //}
+
+    //public readonly struct NameContains
+    //{
+    //    public readonly string name;
+    //    public NameContains(string name) => this.name = name;
+    //}
+    //public readonly struct NameEquals
+    //{
+    //    public readonly string name;
+    //    public NameEquals(string name) => this.name = name;
+    //}
 }

@@ -71,16 +71,24 @@ namespace Rito.CAT.Drawer
             // 1. 동작하지 않음
             if (IsPlayMode || EditorDIHelperMenu.ItemToggles.OnOff.Value == false)
             {
-                DrawPlayModeGUI(position, property, label);
+                if (EditorDIHelperMenu.ItemToggles.ShowDeco.Value == false)
+                    EditorGUI.PropertyField(position, property, label, true);
+                else
+                    DrawPreviewGUI(position, property, label);
             }
             // 2. DI 동작
             else
             {
-                DrawEditModeGUI(position, property, label);
+                DrawInjectionGUI(position, property, label);
             }
         }
 
-        private void DrawEditModeGUI(Rect position, SerializedProperty property, GUIContent label)
+        private void DrawPreviewGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+
+        }
+
+        private void DrawInjectionGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             // 데코를 보여줘야 하는 경우
             bool isFullDeco =
@@ -147,7 +155,10 @@ namespace Rito.CAT.Drawer
                 Component @this = property.serializedObject.targetObject as Component;
 
                 // Inject 수행
-                EditorDIHelper.Inject(@this, Atr, fieldType, out foundTarget);
+                if(Atr.NameIncludes == null)
+                    EditorDIHelper.Inject(@this, Atr, fieldType, out foundTarget);
+                else
+                    EditorDIHelper.Inject_NC(@this, Atr, fieldType, Atr.NameIncludes, out foundTarget);
 
                 // 업데이트 필수 대상
                 if (isUpdateRequired)
@@ -174,7 +185,7 @@ namespace Rito.CAT.Drawer
                     string foundObjName = foundTarget == null ? "NULL" : foundTarget.name;
                     string dirtyText = isRefDirty ? $"[* {foundObjName}]" : "";
 
-                    EditorHelper.ColorInfoBox(infoRectL, Color.green, $"{Atr.Option}{includeDisabled} {dirtyText}");
+                    EditorHelper.ColorInfoBox(infoRectL, Color.green, $"{Atr.Method}{includeDisabled} {dirtyText}");
                     if (GUI.Button(infoRectR, "")) // 강제 리셋 버튼
                     {
                         property.objectReferenceValue = null;
@@ -183,7 +194,7 @@ namespace Rito.CAT.Drawer
                 // 실행 결과 - 실패(대상이 없음)
                 else
                 {
-                    EditorHelper.ColorWarningBox(infoRect, $"{Atr.Option}{includeDisabled} - Failed : 대상을 찾지 못했습니다");
+                    EditorHelper.ColorWarningBox(infoRect, $"{Atr.Method}{includeDisabled} - Failed : 대상을 찾지 못했습니다");
                 }
             }
 
@@ -199,27 +210,33 @@ namespace Rito.CAT.Drawer
                     isRefDirty ? IconYellow : 
                     IconGreen;
 
+                Color oldCol = GUI.backgroundColor;
+                if (Atr.IncludeDisabledObject) // Disabled 포함이면 검정 버튼
+                {
+                    GUI.backgroundColor = new Color(0.3f, 0.3f, 0.3f);
+                }
                 if (GUI.Button(miniRect, icon)) // 상태 표시 + 강제 리셋 버튼
                 {
                     property.objectReferenceValue = null;
                 };
+                GUI.backgroundColor = oldCol;
             }
             EditorGUI.PropertyField(propRect, property, label, true);
-
 
             if (isMiniDeco)
             {
                 DrawTooltip(miniRect, 
-                    $"{Atr.Option}{(Atr.IncludeDisabledObject ? " [D]" : "")}",
+                    $"{Atr.Method}{(Atr.IncludeDisabledObject ? " [D]" : "")}",
                     foundTarget == null ? "=> NULL" : $"=> {foundTarget.name}",
+                    Atr.NameIncludes,
                     isRefDirty
                 );
             }
         }
 
-        private void DrawTooltip(in Rect eventRect, string method, string nextName, bool isDirty)
+        private void DrawTooltip(in Rect eventRect, string method, string nextName, string nameIncludes, bool isDirty)
         {
-            Rect GetBgRect(Rect rect)
+            static Rect GetBgRect(Rect rect)
             {
                 rect.x -= 1f; rect.width += 2f; rect.y -= 1f; rect.height += 2f; return rect;
             }
@@ -228,9 +245,8 @@ namespace Rito.CAT.Drawer
 
             // 스트링으로 너비 계산
             const float WPad = 4f;
-            //float rWidth1 = GUI.skin.label.CalcSize(new GUIContent(method)).x + WPad;
-            const float rWidth1 = 200f;
-            float rWidth2 = GUI.skin.label.CalcSize(new GUIContent(nextName)).x + WPad;
+            float rWidth1 = GUI.skin.label.CalcSize(new GUIContent(method)).x + WPad;
+            //const float rWidth1 = 200f;
 
             if (eventRect.Contains(mPos))
             {
@@ -252,34 +268,47 @@ namespace Rito.CAT.Drawer
                 GUI.Box(tooltipRect, method);
                 GUI.color = c;
 
-                if (isDirty)
+                // 포함 게임오브젝트명
+                if (nameIncludes != null)
                 {
-                    Rect t2r = 
-                    //    tooltipRect;
-                    //t2r.y = t2r.y - t2r.height + 4f;
+                    //nameIncludes = $"includes: {nameIncludes}";
+                    float rWidth = GUI.skin.label.CalcSize(new GUIContent(nameIncludes)).x + WPad;
+                    Rect nameRect =
                         new Rect(
                         tooltipRect.x + tooltipRect.width + 4f,
                         tooltipRect.y,
-                        rWidth2,
-                        //200f,
+                        rWidth,
                         tooltipRect.height
                     );
-                    EditorGUI.DrawRect(GetBgRect(t2r), Color.white);
-                    EditorGUI.DrawRect(t2r, Color.black);
+
+                    EditorGUI.DrawRect(GetBgRect(nameRect), Color.white);
+                    EditorGUI.DrawRect(nameRect, Color.black);
 
                     Color c2 = GUI.color;
                     GUI.color = Color.yellow;
-                    GUI.Box(t2r, nextName);
+                    GUI.Box(nameRect, nameIncludes);
+                    GUI.color = c2;
+                }
+
+                // 변경될 참조명
+                if (isDirty)
+                {
+                    float rWidth = GUI.skin.label.CalcSize(new GUIContent(nextName)).x + WPad;
+                    Rect nextNameRect = tooltipRect;
+                    nextNameRect.y = nextNameRect.y - nextNameRect.height + 2f;
+                    nextNameRect.width = rWidth;
+
+                    EditorGUI.DrawRect(GetBgRect(nextNameRect), Color.white);
+                    EditorGUI.DrawRect(nextNameRect, Color.black);
+
+                    Color c2 = GUI.color;
+                    GUI.color = Color.yellow;
+                    GUI.Box(nextNameRect, nextName);
                     GUI.color = c2;
                 }
 
                 GUI.skin.box.alignment = aln;
             }
-        }
-
-        private void DrawPlayModeGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            EditorGUI.PropertyField(position, property, label, true);
         }
     }
 }

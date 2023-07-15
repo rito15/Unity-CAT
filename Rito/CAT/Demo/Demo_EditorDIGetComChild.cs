@@ -9,16 +9,16 @@ namespace Rito.CAT.Demo
     // 작성자 : Rito
     public class Demo_EditorDIGetComChild : MonoBehaviour
     {
-        [EditorDI(DiMethod.GetComponentInChildren)]
+        [EditorDI(DiMethod.GetComponentInChildren, false)]
         public CapsuleCollider _getCInChildren; // 자신
 
-        [EditorDI(DiMethod.GetComponentInChildrenOnly)]
+        [EditorDI(DiMethod.GetComponentInChildrenOnly, false)]
         public CapsuleCollider _getCInChildrenOnly; // 자식
 
-        [EditorDI(DiMethod.GetComponentInChildren, injectEvenDisabled: true)]
+        [EditorDI(DiMethod.GetComponentInChildren, evenDisabled: true)]
         public BoxCollider _getCInChildrenEvenDisabled; // 자식
 
-        [EditorDI(DiMethod.GetComponentInChildrenOnly, injectEvenDisabled: true)]
+        [EditorDI(DiMethod.GetComponentInChildrenOnly, evenDisabled: true)]
         public BoxCollider _getCInChildrenOnlyEvenDisabled; // 자식
     }
 }
