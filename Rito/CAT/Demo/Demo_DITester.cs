@@ -15,4 +15,18 @@ public class Demo_DITester : MonoBehaviour
     private UnityEngine.UI.Image _bgImage2;
 
     public Light noDI2;
+
+    [Rito.CAT.EditorDI(Rito.CAT.DiMethod.FindObjectOfType)]
+    [SerializeField]
+    private UnityEngine.UI.Image _bgImage3;
+
+    public Rigidbody noDI3;
+
+    [Space(12f)]
+    [Rito.CAT.EditorDI]
+    public Canvas anyCanvas;
+    [Rito.CAT.EditorDI("A")]
+    public Canvas uiCanvasA;
+    [Rito.CAT.EditorDI("B")]
+    public Canvas uiCanvasB;
 }

@@ -32,6 +32,12 @@ namespace Rito.CAT
         }
 
         public EditorDIAttribute(DiMethod method, string nameIncludes) : this(method, true, nameIncludes) { }
+
+        // 전역 사용을 위한 생성자
+        public EditorDIAttribute(string nameIncludes) : this(DiMethod.FindObjectOfType, true, nameIncludes) { }
+
+        // 싱글톤 참조를 위한 생성자
+        public EditorDIAttribute() : this(DiMethod.FindObjectOfType, true, null) { }
     }
 
     // 애트리뷰트에서 선택할 옵션

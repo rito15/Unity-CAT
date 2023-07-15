@@ -12,8 +12,6 @@ namespace Rito.CAT.Drawer
     [CustomPropertyDrawer(typeof(EditorDIAttribute), true)]
     public class EditorDIAttributeDrawer : PropertyDrawer
     {
-        private const bool SHOW_BIG_DECO = false;
-
         EditorDIAttribute Atr => attribute as EditorDIAttribute;
 
         private float Height { get; set; } =
@@ -25,9 +23,17 @@ namespace Rito.CAT.Drawer
 
         private bool IsPlayMode => EditorApplication.isPlaying;
 
-        private bool IsFullDeco;
-        private bool IsMiniDeco;
-        private bool IsPreviewDeco;
+        private static bool IsFullDeco =>
+            EditorDIHelperMenu.ItemToggles.OnOff.Value &&
+            EditorDIHelperMenu.ItemToggles.ShowDeco.Value &&
+            EditorDIHelperMenu.ItemToggles.FullDeco.Value;
+        private static bool IsMiniDeco =>
+            EditorDIHelperMenu.ItemToggles.OnOff.Value &&
+            EditorDIHelperMenu.ItemToggles.ShowDeco.Value &&
+            EditorDIHelperMenu.ItemToggles.FullDeco.Value == false;
+        private static bool IsPreviewDeco =>
+            EditorDIHelperMenu.ItemToggles.OnOff.Value == false &&
+            EditorDIHelperMenu.ItemToggles.ShowDeco.Value;
 
         #region Icons
         private static GUIContent _iconGreen;
@@ -64,7 +70,7 @@ namespace Rito.CAT.Drawer
         }
 
         private static GUIContent _iconPreview1;
-        private static GUIContent IconPreview1
+        private static GUIContent IconPreviewWhite
         {
             get
             {
@@ -75,7 +81,7 @@ namespace Rito.CAT.Drawer
         }
 
         private static GUIContent _iconPreview2;
-        private static GUIContent IconPreview2
+        private static GUIContent IconPreviewCyan
         {
             get
             {
@@ -85,13 +91,24 @@ namespace Rito.CAT.Drawer
             }
         }
 
+        private static GUIContent _iconPreviewRed;
+        private static GUIContent IconPreviewRed
+        {
+            get
+            {
+                if (_iconPreviewRed == null)
+                    _iconPreviewRed = EditorGUIUtility.IconContent("sv_icon_dot6_sml");
+                return _iconPreviewRed;
+            }
+        }
+
         #endregion
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            if (EditorDIHelperMenu.ItemToggles.OnOff.Value == false) return Height;
-            if (EditorDIHelperMenu.ItemToggles.ShowDeco.Value == false) return Height;
-            return IsPlayMode ? Height : Height * 2.5f;
+            if (IsPlayMode) return Height;
+            if (IsFullDeco) return Height * 2.5f;
+            return Height;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -99,12 +116,10 @@ namespace Rito.CAT.Drawer
             // 1. 동작하지 않음
             if (IsPlayMode || EditorDIHelperMenu.ItemToggles.OnOff.Value == false)
             {
-                // 기본
-                if (EditorDIHelperMenu.ItemToggles.ShowDeco.Value == false)
-                    EditorGUI.PropertyField(position, property, label, true);
-                // 간단히 표시만
-                else
+                if(IsPreviewDeco)
                     DrawPreviewGUI(position, property, label);
+                else
+                    EditorGUI.PropertyField(position, property, label, true);
             }
             // 2. DI 동작
             else
@@ -120,27 +135,22 @@ namespace Rito.CAT.Drawer
 
             EditorGUI.PropertyField(position, property, label, true);
 
+            //Component foundNamedTarget = Atr.NameIncludes == null ? null : 
+            //    ComponentHelper.FindComponentInScene_NC(fieldInfo.FieldType, Atr.NameIncludes, Atr.IncludeDisabledObject);
+
             Color bg = GUI.backgroundColor;
             GUI.backgroundColor = new Color(1f, 1f, 1f, 0.1f);
-            GUI.Button(miniRect, Atr.NameIncludes == null ? IconPreview1 : IconPreview2);
+            GUI.Button(miniRect, Atr.NameIncludes == null ? IconPreviewWhite : IconPreviewCyan);
             GUI.backgroundColor = bg;
 
-            DrawTooltip(miniRect, $"{Atr.Method}{(Atr.IncludeDisabledObject ? " [D]" : "")}", "", Atr.NameIncludes, false);
+            DrawPreviewTooltip(miniRect);
         }
 
         private void DrawInjectionGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            // 왕데코를 보여줘야 하는 경우
-            bool isFullDeco =
-                EditorDIHelperMenu.ItemToggles.OnOff.Value &&
-                EditorDIHelperMenu.ItemToggles.ShowDeco.Value && SHOW_BIG_DECO;
-            bool isMiniDeco =
-                EditorDIHelperMenu.ItemToggles.OnOff.Value  &&
-                EditorDIHelperMenu.ItemToggles.ShowDeco.Value == false;
-
-            float propH  = isFullDeco ? Height * 1.5f : 0f;
-            float errorH = isFullDeco ? Height * 2f   : Height;
-            float errorY = isFullDeco ? Height * 0.5f : 0f;
+            float propH  = IsFullDeco ? Height * 1.5f : 0f;
+            float errorH = IsFullDeco ? Height * 2f   : Height;
+            float errorY = IsFullDeco ? Height * 0.5f : 0f;
 
             // -
             Rect infoRect  = new Rect(position.x, position.y + Height * 0.5f, position.width, Height);
@@ -163,7 +173,7 @@ namespace Rito.CAT.Drawer
                     Debug.LogError("[AutoInject] 배열 또는 리스트에는 사용할 수 없습니다.");
                 }
 
-                if (isFullDeco)
+                if (IsFullDeco)
                 {
                     // 그 외의 경우, 인스펙터에 큼지막한 에러 박스
                     EditorHelper.ColorErrorBox(errorRect,
@@ -217,8 +227,8 @@ namespace Rito.CAT.Drawer
             // 인젝션 실패함
             bool isInjectionFailed = property.objectReferenceValue == null;
 
-            // 데코레이터 표시 여부
-            if (isFullDeco)
+            // 풀 데코레이터 표시 여부
+            if (IsFullDeco)
             {
                 // 실행 결과 - 할당 성공
                 if (property.objectReferenceValue != null)
@@ -241,7 +251,7 @@ namespace Rito.CAT.Drawer
 
             Rect miniRect = default;
             // 동작은 하지만 데코는 안보여주는 경우
-            if (isMiniDeco)
+            if (IsMiniDeco)
             {
                 const float MiniW = 20f;
                 miniRect = new Rect(position.x - MiniW, position.y, MiniW, position.height);
@@ -264,30 +274,38 @@ namespace Rito.CAT.Drawer
             }
             EditorGUI.PropertyField(propRect, property, label, true);
 
-            if (isMiniDeco)
+            if (IsMiniDeco)
             {
-                DrawTooltip(miniRect, 
-                    $"{Atr.Method}{(Atr.IncludeDisabledObject ? " [D]" : "")}",
+                DrawTooltip(
+                    miniRect, 
                     foundTarget == null ? "=> NULL" : $"=> {foundTarget.name}",
-                    Atr.NameIncludes,
-                    isRefDirty
+                    //(foundTarget != null && (foundTarget as Component).gameObject == (property.serializedObject.targetObject as Component).gameObject) ?
+                    //    $"{Atr.NameIncludes}(this)" : Atr.NameIncludes,
+                    isRefDirty,
+                    foundTarget as Component
                 );
             }
         }
 
-        private void DrawTooltip(in Rect eventRect, string method, string nextName, string nameIncludes, bool isDirty)
+        private void DrawPreviewTooltip(in Rect eventRect)
         {
             static Rect GetBgRect(Rect rect)
             {
                 rect.x -= 1f; rect.width += 2f; rect.y -= 1f; rect.height += 2f; return rect;
             }
 
+            // 툴팁 글자 색상
+            Color cMethod = Atr.NameIncludes != null ? Color.cyan : Color.white;
+            Color cNameContains = Color.cyan;
+
             Vector2 mPos =  Event.current.mousePosition;
+
+            string method = $"{Atr.Method}{(Atr.IncludeDisabledObject ? " [D]" : "")}";
+            string nameIncludes = Atr.NameIncludes;
 
             // 스트링으로 너비 계산
             const float WPad = 4f;
             float rWidth1 = GUI.skin.label.CalcSize(new GUIContent(method)).x + WPad;
-            //const float rWidth1 = 200f;
 
             if (eventRect.Contains(mPos))
             {
@@ -305,14 +323,13 @@ namespace Rito.CAT.Drawer
                 GUI.skin.box.alignment = TextAnchor.MiddleLeft;
 
                 Color c = GUI.color;
-                GUI.color = Color.cyan;
-                GUI.Box(tooltipRect, method);
+                GUI.color = cMethod;
+                GUI.Box(tooltipRect, method); // 메소드 툴팁
                 GUI.color = c;
 
                 // 포함 게임오브젝트명
                 if (nameIncludes != null)
                 {
-                    //nameIncludes = $"includes: {nameIncludes}";
                     float rWidth = GUI.skin.label.CalcSize(new GUIContent(nameIncludes)).x + WPad;
                     Rect nameRect =
                         new Rect(
@@ -326,8 +343,81 @@ namespace Rito.CAT.Drawer
                     EditorGUI.DrawRect(nameRect, Color.black);
 
                     Color c2 = GUI.color;
-                    GUI.color = Color.yellow;
-                    GUI.Box(nameRect, nameIncludes);
+                    GUI.color = cNameContains;
+                    GUI.Box(nameRect, nameIncludes); // 포함 게임오브젝트명 툴팁
+                    GUI.color = c2;
+                }
+
+                GUI.skin.box.alignment = aln;
+            }
+        }
+
+        private void DrawTooltip(in Rect eventRect, string nextName, bool isDirty, Component foundComponent)
+        {
+            static Rect GetBgRect(Rect rect)
+            {
+                rect.x -= 1f; rect.width += 2f; rect.y -= 1f; rect.height += 2f; return rect;
+            }
+
+            string method = $"{Atr.Method}{(Atr.IncludeDisabledObject ? " [D]" : "")}";
+            string nameIncludes = Atr.NameIncludes;
+
+            // 툴팁 글자 색상
+            Color cMethod = Color.cyan;
+            Color cNameContains = (nameIncludes != null && foundComponent != null) ? 
+                (foundComponent.gameObject.activeInHierarchy ? Color.green : Color.yellow) : Color.red;
+
+            Vector2 mPos =  Event.current.mousePosition;
+
+            // 스트링으로 너비 계산
+            const float WPad = 4f;
+            float rWidth1 = GUI.skin.label.CalcSize(new GUIContent(method)).x + WPad;
+
+            if (eventRect.Contains(mPos))
+            {
+                Rect tooltipRect = new Rect(
+                    eventRect.x + eventRect.width + 2f,
+                    eventRect.y - 4f,
+                    rWidth1,
+                    eventRect.height + 4f
+                );
+
+                EditorGUI.DrawRect(GetBgRect(tooltipRect), Color.white);
+                EditorGUI.DrawRect(tooltipRect, Color.black);
+
+                var aln = GUI.skin.box.alignment;
+                GUI.skin.box.alignment = TextAnchor.MiddleLeft;
+
+                Color c = GUI.color;
+                GUI.color = cMethod;
+                GUI.Box(tooltipRect, method); // 메소드 툴팁
+                GUI.color = c;
+
+                // 포함 게임오브젝트명
+                if (nameIncludes != null)
+                {
+                    float rWidth = GUI.skin.label.CalcSize(new GUIContent(nameIncludes)).x + WPad;
+                    Rect nameRect =
+                        new Rect(
+                        tooltipRect.x + tooltipRect.width + 4f,
+                        tooltipRect.y,
+                        rWidth,
+                        tooltipRect.height
+                    );
+
+                    EditorGUI.DrawRect(GetBgRect(nameRect), Color.white);
+                    EditorGUI.DrawRect(nameRect, Color.black);
+
+                    // 더블 클릭 시 대상으로 포커스
+                    //if (Event.current.clickCount > 1 && Event.current.type == EventType.Used)
+                    //{
+                    //    if(foundNamedTarget != null)
+                    //        Selection.activeObject = foundNamedTarget;
+                    //}
+
+                    Color c2 = GUI.color;
+                    GUI.color = cNameContains;
+                    GUI.Box(nameRect, nameIncludes); // 포함 게임오브젝트명 툴팁
                     GUI.color = c2;
                 }
 
