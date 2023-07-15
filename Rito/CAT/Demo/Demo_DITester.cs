@@ -8,7 +8,11 @@ public class Demo_DITester : MonoBehaviour
     [SerializeField]
     private UnityEngine.UI.Image _bgImage;
 
+    public GameObject noDI;
+
     [Rito.CAT.EditorDI(Rito.CAT.DiMethod.FindObjectOfType, "Image BG")]
     [SerializeField]
     private UnityEngine.UI.Image _bgImage2;
+
+    public Light noDI2;
 }

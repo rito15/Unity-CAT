@@ -12,6 +12,8 @@ namespace Rito.CAT.Drawer
     [CustomPropertyDrawer(typeof(EditorDIAttribute), true)]
     public class EditorDIAttributeDrawer : PropertyDrawer
     {
+        private const bool SHOW_BIG_DECO = false;
+
         EditorDIAttribute Atr => attribute as EditorDIAttribute;
 
         private float Height { get; set; } =
@@ -22,6 +24,10 @@ namespace Rito.CAT.Drawer
 #endif
 
         private bool IsPlayMode => EditorApplication.isPlaying;
+
+        private bool IsFullDeco;
+        private bool IsMiniDeco;
+        private bool IsPreviewDeco;
 
         #region Icons
         private static GUIContent _iconGreen;
@@ -57,6 +63,28 @@ namespace Rito.CAT.Drawer
             }
         }
 
+        private static GUIContent _iconPreview1;
+        private static GUIContent IconPreview1
+        {
+            get
+            {
+                if (_iconPreview1 == null)
+                    _iconPreview1 = EditorGUIUtility.IconContent("sv_icon_dot0_sml");
+                return _iconPreview1;
+            }
+        }
+
+        private static GUIContent _iconPreview2;
+        private static GUIContent IconPreview2
+        {
+            get
+            {
+                if (_iconPreview2 == null)
+                    _iconPreview2 = EditorGUIUtility.IconContent("sv_icon_dot2_sml");
+                return _iconPreview2;
+            }
+        }
+
         #endregion
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -71,8 +99,10 @@ namespace Rito.CAT.Drawer
             // 1. 동작하지 않음
             if (IsPlayMode || EditorDIHelperMenu.ItemToggles.OnOff.Value == false)
             {
+                // 기본
                 if (EditorDIHelperMenu.ItemToggles.ShowDeco.Value == false)
                     EditorGUI.PropertyField(position, property, label, true);
+                // 간단히 표시만
                 else
                     DrawPreviewGUI(position, property, label);
             }
@@ -85,18 +115,29 @@ namespace Rito.CAT.Drawer
 
         private void DrawPreviewGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            const float MiniW = 20f;
+            Rect miniRect = new Rect(position.x - MiniW, position.y, MiniW, position.height);
 
+            EditorGUI.PropertyField(position, property, label, true);
+
+            Color bg = GUI.backgroundColor;
+            GUI.backgroundColor = new Color(1f, 1f, 1f, 0.1f);
+            GUI.Button(miniRect, Atr.NameIncludes == null ? IconPreview1 : IconPreview2);
+            GUI.backgroundColor = bg;
+
+            DrawTooltip(miniRect, $"{Atr.Method}{(Atr.IncludeDisabledObject ? " [D]" : "")}", "", Atr.NameIncludes, false);
         }
 
         private void DrawInjectionGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            // 데코를 보여줘야 하는 경우
+            // 왕데코를 보여줘야 하는 경우
             bool isFullDeco =
                 EditorDIHelperMenu.ItemToggles.OnOff.Value &&
-                EditorDIHelperMenu.ItemToggles.ShowDeco.Value;
+                EditorDIHelperMenu.ItemToggles.ShowDeco.Value && SHOW_BIG_DECO;
             bool isMiniDeco =
                 EditorDIHelperMenu.ItemToggles.OnOff.Value  &&
                 EditorDIHelperMenu.ItemToggles.ShowDeco.Value == false;
+
             float propH  = isFullDeco ? Height * 1.5f : 0f;
             float errorH = isFullDeco ? Height * 2f   : Height;
             float errorY = isFullDeco ? Height * 0.5f : 0f;

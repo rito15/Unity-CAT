@@ -64,6 +64,28 @@ namespace Rito.CAT
                     return true;
                 }
             }
+            public struct FullDeco
+            {
+                private const string MenuItemTitle = MenuItemRootName +  "Full Decorator";
+                public static bool Value
+                {
+                    get => EditorPrefs.GetBool(MenuItemTitle, true);
+                    private set => EditorPrefs.SetBool(MenuItemTitle, value);
+                }
+
+                [MenuItem(MenuItemTitle, false, priority = 102)]
+                private static void MenuItem()
+                {
+                    Value = !Value;
+                }
+
+                [MenuItem(MenuItemTitle, true, priority = 102)]
+                private static bool MenuItem_Validate()
+                {
+                    Menu.SetChecked(MenuItemTitle, Value);
+                    return true;
+                }
+            }
         }
 
         [MenuItem(MenuItemRootName + "Force Update Now", priority = 601)]
