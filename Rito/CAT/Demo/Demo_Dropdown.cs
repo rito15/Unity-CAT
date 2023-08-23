@@ -18,7 +18,7 @@ namespace Rito.CAT.Demo
         public string strTag;
 
         // [StringDropDown()]
-        [StringDropDown("TestA", "asdbc", "12345")]
+        [StringDropDown("TestA", "asdbc", "12345", "http://1234", "http://wee")]
         public string strDropdown;
 
         public int aaa = 123123;

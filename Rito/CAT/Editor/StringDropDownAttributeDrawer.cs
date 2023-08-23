@@ -55,7 +55,7 @@ namespace Rito.CAT.Drawer
             // 2. 우측 팝업 그리기 + 값 할당
             if (optionContents == null)
             {
-                optionContents = Atr.Options.Select(s => new GUIContent(s)).ToArray();
+                optionContents = Atr.Options.Select(s => new GUIContent(s.Replace("/", "\u2215"))).ToArray();
             }
             int curIdx = Mathf.Max(0, Array.IndexOf(Atr.Options, property.stringValue));
             int nextIdx = EditorGUI.Popup(position, label, curIdx, optionContents);
