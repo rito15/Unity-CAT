@@ -21,6 +21,8 @@ namespace Rito.CAT.Demo
         [StringDropDown("TestA", "asdbc", "12345")]
         public string strDropdown;
 
+        public int aaa = 123123;
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Z))

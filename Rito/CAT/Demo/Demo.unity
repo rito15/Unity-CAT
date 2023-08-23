@@ -1922,7 +1922,8 @@ MonoBehaviour:
   intLayer: 5
   strLayer: Water
   strTag: Finish
-  strDropdown: TestA
+  strDropdown: asdbc
+  aaa: 123123
 --- !u!4 &1483016112
 Transform:
   m_ObjectHideFlags: 0

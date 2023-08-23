@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Rito.CAT.Drawer
@@ -14,6 +15,7 @@ namespace Rito.CAT.Drawer
     public class StringDropDownAttributeDrawer : PropertyDrawer
     {
         private StringDropDownAttribute Atr => attribute as StringDropDownAttribute;
+        private GUIContent[] optionContents;
         
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
@@ -48,11 +50,15 @@ namespace Rito.CAT.Drawer
             Rect rectRight = new Rect(position.x + widthLeft, position.y, widthRight, position.height);
 
             // 1. 좌측 레이블 그리기
-            EditorGUI.LabelField(rectLeft, label);
+            // EditorGUI.LabelField(rectLeft, label);
 
             // 2. 우측 팝업 그리기 + 값 할당
+            if (optionContents == null)
+            {
+                optionContents = Atr.Options.Select(s => new GUIContent(s)).ToArray();
+            }
             int curIdx = Mathf.Max(0, Array.IndexOf(Atr.Options, property.stringValue));
-            int nextIdx = EditorGUI.Popup(rectRight, curIdx, Atr.Options);
+            int nextIdx = EditorGUI.Popup(position, label, curIdx, optionContents);
             property.stringValue = Atr.Options[nextIdx];
             
 
