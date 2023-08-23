@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System;
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
@@ -50,8 +51,9 @@ namespace Rito.CAT.Drawer
             EditorGUI.LabelField(rectLeft, label);
 
             // 2. 우측 팝업 그리기 + 값 할당
-            Atr.ChangeSelection(EditorGUI.Popup(rectRight, Atr.SelectedIndex, Atr.Options));
-            property.stringValue = Atr.Options[Atr.SelectedIndex];
+            int curIdx = Mathf.Max(0, Array.IndexOf(Atr.Options, property.stringValue));
+            int nextIdx = EditorGUI.Popup(rectRight, curIdx, Atr.Options);
+            property.stringValue = Atr.Options[nextIdx];
             
 
             void Local_ShowErrorBox(string msg)
