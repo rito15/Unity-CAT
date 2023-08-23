@@ -2,6 +2,8 @@ using UnityEngine;
 
 namespace Rito.CAT
 {
+    // 2023. 08. 23. TODO: PropertyDrawer로 변경하여 기존 프로퍼티를 감추거나 표시할 수 있도록 수정
+    
     /// <summary>
     /// 2021. 01. 15.
     /// <para/> 프로퍼티 상단에 박스 메모 작성
@@ -9,7 +11,10 @@ namespace Rito.CAT
     [System.AttributeUsage(System.AttributeTargets.Field, AllowMultiple = true, Inherited = false)]
     public class MemoBoxAttribute : PropertyAttribute
     {
-        public string[] Contents { get; private set; } = new string[] { "" };
+        public string[] Contents { get; private set; }
+
+        // /// <summary> 프로퍼티(필드)를 인스펙터에서 표시/제외할지 여부 </summary>
+        // public bool hideProperty { get; set; } = false;
 
         public int FontSize { get; set; } = 12;
         public int LineSpacing { get; set; } = 2;
