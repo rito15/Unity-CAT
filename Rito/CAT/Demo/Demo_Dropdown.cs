@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Rito.CAT.Demo
 {
@@ -15,5 +16,17 @@ namespace Rito.CAT.Demo
 
         [TagDropDown]
         public string strTag;
+
+        // [StringDropDown()]
+        [StringDropDown("TestA", "asdbc", "12345")]
+        public string strDropdown;
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                Debug.Log($"String Dropdown Value : {strDropdown}");
+            }
+        }
     }
 }
