@@ -1,5 +1,9 @@
 # Unity CAT
 - Unity Custom ATtributes
+- UPM
+```
+https://github.com/rito15/Unity-CAT.git
+```
 
 <br>
 
