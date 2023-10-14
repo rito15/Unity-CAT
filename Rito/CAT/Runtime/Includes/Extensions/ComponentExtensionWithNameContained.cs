@@ -51,7 +51,7 @@ namespace Rito.CAT
                 if (ignoreCase)
                 {
                     currentName  = currentName.ToLower();
-                    nameIncludes = nameIncludes.ToLower();
+                    nameIncludes = nameIncludes?.ToLower();
                 }
 
                 // nameEquals가 존재하는 경우 : nameIncludes 무시
@@ -112,7 +112,7 @@ namespace Rito.CAT
                 if (ignoreCase)
                 {
                     targetName   = targetName.ToLower();
-                    nameIncludes = nameIncludes.ToLower();
+                    nameIncludes = nameIncludes?.ToLower();
                 }
 
                 // nameEquals가 존재하는 경우 : nameIncludes 무시

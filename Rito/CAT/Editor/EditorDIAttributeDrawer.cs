@@ -200,9 +200,45 @@ namespace Rito.CAT.Drawer
             Rect infoRectL = new Rect(position.x, position.y + Height * 0.5f, position.width - ResetBtnW, Height);
             Rect infoRectR = new Rect(position.x + position.width - ResetBtnW, position.y + Height * 0.5f, ResetBtnW, Height);
 
+            bool isTargetGameObject = false;
+
+            // 2023. 10. 14. GameObject 타입 타겟 추가
+            if (fieldType.Equals(typeof(GameObject)))
+            {
+                // ComponentType을 설정하지 않은 경우: Transform 타입으로 자동 설정
+                if (Atr.ComponentType == null)
+                {
+                    isTargetGameObject = true;
+                    Atr.ComponentType = typeof(Transform);
+                    fieldType = Atr.ComponentType;
+                }
+                // 게임오브젝트를 대상으로 하려면 올바른 ComponentType 설정 반드시 필요
+                else if (Atr.ComponentType.IsSubclassOf(typeof(Component)))
+                {
+                    isTargetGameObject = true;
+                    fieldType = Atr.ComponentType;
+                }
+                else
+                {
+                    EditorHelper.ColorErrorBox(errorRect,
+                        $"[{fieldType}] {fieldInfo.Name}\n" +
+                        $"Error : ComponentTypeOfGameObject 옵션에 Component를 상속하는 타입을 지정하세요."
+                    );
+                    return;
+                }
+
+                //// ComponentType 프로퍼티를 설정하지 않은 경우 -> 자동으로 typeof(Component) 초기화
+                //if (Atr.ComponentType == null ||
+                //    !Atr.ComponentType.IsSubclassOf(typeof(Component)))
+                //{
+                //    Atr.ComponentType = typeof(Component);
+                //    fieldType = Atr.ComponentType;
+                //}
+                //isTargetGameObject = true;
+            }
 
             // 컴포넌트 상속 타입이 아닌 타입 - 에러박스
-            if (fieldType.IsSubclassOf(typeof(Component)) == false)
+            if (!isTargetGameObject && fieldType.IsSubclassOf(typeof(Component)) == false)
             {
                 // 배열, 리스트면 크기를 0으로 고정하고 콘솔 에러 메시지
                 if (fieldType.Ex_IsArrayOrListType())
@@ -249,6 +285,12 @@ namespace Rito.CAT.Drawer
                 else
                     EditorDIHelper.Inject_NC(
                         @this, Atr, fieldType, Atr.NameIncludes, Atr.NameEquals, Atr.IgnoreCase, out foundTarget);
+
+                // 게임오브젝트 타겟인 경우, 찾은 컴포넌트의 게임오브젝트 추출
+                if (isTargetGameObject && foundTarget != null)
+                {
+                    foundTarget = (foundTarget as Component).gameObject;
+                }
 
                 // 업데이트 필수 대상
                 if (isUpdateRequired)
