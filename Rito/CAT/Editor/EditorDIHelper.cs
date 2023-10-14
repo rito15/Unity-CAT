@@ -64,9 +64,11 @@ namespace Rito.CAT
             } // switch
         }
 
-        // 게임오브젝트 이름 포함
+        // 게임오브젝트 이름 포함 or 일치
         public static void Inject_NC(Component comField, EditorDIAttribute atr, Type fieldType, 
             string nameIncludes,
+            string nameEquals,
+            bool ignoreCase,
             out UnityEngine.Object found
         )
         {
@@ -90,16 +92,19 @@ namespace Rito.CAT
 
                 case DiMethod.GetComponentInChildren:
                 case DiMethod.GetComponentInChildrenOnly:
-                    found = comField.Ex_GetComponentInChildren_NC(fieldType, nameIncludes, includeSelf, evenDisabled);
+                    found = comField.Ex_GetComponentInChildren_NC(
+                        fieldType, nameIncludes, nameEquals, ignoreCase, includeSelf, evenDisabled);
                     break;
 
                 case DiMethod.GetComponentInParents:
                 case DiMethod.GetComponentInParentsOnly:
-                    found = comField.Ex_GetComponentInParents_NC(fieldType, nameIncludes, includeSelf, evenDisabled);
+                    found = comField.Ex_GetComponentInParents_NC(
+                        fieldType, nameIncludes, nameEquals, ignoreCase, includeSelf, evenDisabled);
                     break;
 
                 case DiMethod.FindObjectOfType:
-                    found = ComponentHelper.FindComponentInScene_NC(fieldType, nameIncludes, evenDisabled);
+                    found = ComponentHelper.FindComponentInScene_NC(
+                        fieldType, nameIncludes, nameEquals, ignoreCase, evenDisabled);
                     break;
 
             } // switch

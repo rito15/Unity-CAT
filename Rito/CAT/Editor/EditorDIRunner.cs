@@ -81,7 +81,8 @@ namespace Rito.CAT
                         if (atr.NameIncludes == null)
                             EditorDIHelper.Inject(tr, atr, ftype, out resObj);
                         else
-                            EditorDIHelper.Inject_NC(tr, atr, ftype, atr.NameIncludes, out resObj);
+                            EditorDIHelper.Inject_NC(
+                                tr, atr, ftype, atr.NameIncludes, atr.NameEquals, atr.IgnoreCase, out resObj);
 
                         finfo.SetValue(mono, resObj); // 강제로 상태 업데이트하여 인젝션 수행
                     }

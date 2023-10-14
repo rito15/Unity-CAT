@@ -50,6 +50,8 @@ namespace Rito.CAT
         /// </summary>
         public static Component FindComponentInScene_NC(Type targetType,
             string nameIncludes,
+            string nameEquals,
+            bool ignoreCase,
             bool evenDisabled // 비활성화 상태 포함
         )
         {
@@ -58,7 +60,7 @@ namespace Rito.CAT
             foreach (GameObject rootObject in rootObjects)
             {
                 Component found = rootObject.transform.Ex_GetComponentInChildren_NC(
-                    targetType, nameIncludes, true, evenDisabled    
+                    targetType, nameIncludes, nameEquals, ignoreCase, true, evenDisabled    
                 );
                 if (found != null)
                 {

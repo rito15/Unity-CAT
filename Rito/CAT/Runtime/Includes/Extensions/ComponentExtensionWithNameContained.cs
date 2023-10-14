@@ -17,6 +17,8 @@ namespace Rito.CAT
         /// </summary>
         public static Component Ex_GetComponentInChildren_NC(this Component @this, Type targetType, 
             string nameIncludes,
+            string nameEquals,
+            bool ignoreCase,
             bool includeSelf, // 자신 포함
             bool evenDisabled // 비활성화 상태 포함
         )
@@ -45,7 +47,26 @@ namespace Rito.CAT
                     if (!current.gameObject.activeInHierarchy) continue;
                 }
 
-                if (current.name.Contains(nameIncludes))
+                string currentName = current.name.Trim();
+                if (ignoreCase)
+                {
+                    currentName  = currentName.ToLower();
+                    nameIncludes = nameIncludes.ToLower();
+                }
+
+                // nameEquals가 존재하는 경우 : nameIncludes 무시
+                if (!string.IsNullOrEmpty(nameEquals))
+                {
+                    nameEquals = nameEquals.Trim();
+                    if (ignoreCase) nameEquals = nameEquals.ToLower();
+
+                    if (currentName.Equals(nameEquals))
+                    {
+                        Component foundComponent = current.GetComponent(targetType);
+                        if (foundComponent != null) return foundComponent;
+                    }
+                }
+                else if (currentName.Contains(nameIncludes))
                 {
                     Component foundComponent = current.GetComponent(targetType);
                     if (foundComponent != null) return foundComponent;
@@ -64,6 +85,8 @@ namespace Rito.CAT
         /// </summary>
         public static Component Ex_GetComponentInParents_NC(this Component @this, Type targetType, 
             string nameIncludes,
+            string nameEquals,
+            bool ignoreCase,
             bool includeSelf, // 자신 포함
             bool evenDisabled // 비활성화 상태 포함
         )
@@ -85,7 +108,26 @@ namespace Rito.CAT
                     if (target.gameObject.activeInHierarchy == false) return null;
                 }
 
-                if (target.name.Contains(nameIncludes))
+                string targetName = target.name.Trim();
+                if (ignoreCase)
+                {
+                    targetName   = targetName.ToLower();
+                    nameIncludes = nameIncludes.ToLower();
+                }
+
+                // nameEquals가 존재하는 경우 : nameIncludes 무시
+                if (!string.IsNullOrEmpty(nameEquals))
+                {
+                    nameEquals = nameEquals.Trim();
+                    if (ignoreCase) nameEquals = nameEquals.ToLower();
+
+                    if (!targetName.Equals(nameEquals.Trim()))
+                    {
+                        Component com = target.GetComponent(targetType);
+                        if (com != null) return com;
+                    }
+                }
+                else if (targetName.Contains(nameIncludes))
                 {
                     Component com = target.GetComponent(targetType);
                     if (com != null) return com;

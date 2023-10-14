@@ -244,10 +244,11 @@ namespace Rito.CAT.Drawer
                 Component @this = property.serializedObject.targetObject as Component;
 
                 // Inject 수행
-                if(Atr.NameIncludes == null)
+                if(Atr.NameIncludes == null && Atr.NameEquals == null)
                     EditorDIHelper.Inject(@this, Atr, fieldType, out foundTarget);
                 else
-                    EditorDIHelper.Inject_NC(@this, Atr, fieldType, Atr.NameIncludes, out foundTarget);
+                    EditorDIHelper.Inject_NC(
+                        @this, Atr, fieldType, Atr.NameIncludes, Atr.NameEquals, Atr.IgnoreCase, out foundTarget);
 
                 // 업데이트 필수 대상
                 if (isUpdateRequired)
@@ -399,7 +400,10 @@ namespace Rito.CAT.Drawer
             }
 
             string method = $"{Atr.Method}{(Atr.IncludeDisabledObject ? " [D]" : "")}";
-            string nameIncludes = Atr.NameIncludes;
+            string nameIncludes = 
+                (string.IsNullOrEmpty(Atr.NameEquals)) ? 
+                    Atr.NameIncludes : $"{Atr.NameEquals} [EQ]"
+            ;
 
             // 툴팁 글자 색상
             Color cMethod = nameIncludes != null ? Color.cyan : Color.green;

@@ -24,6 +24,23 @@ namespace Rito.CAT
         /// </summary>
         public string NameIncludes { get; private set; }
 
+        ////////////////////////////////////// OPTIONAL ///////////////////////////////////
+        /// <summary>
+        /// NameIncludes, NameEquals 대소문자 구분하지 않음
+        /// </summary>
+        public bool IgnoreCase { get; set; } = true;
+
+        /// <summary>
+        /// 게임오브젝트 이름과 완전히 일치하는 경우 탐색 (NameInclues보다 우선 적용)
+        /// </summary>
+        public string NameEquals { get; set; } = null;
+
+        /// <summary> 게임오브젝트를 대상으로 한 경우에만 사용: 대상 타입의 컴포넌트를 찾아 게임오브젝트 주입 </summary>
+        public System.Type ComponentTypeOfGameObject { get; set; }
+
+        ////////////////////////////////////// -------- ///////////////////////////////////
+
+
         public EditorDIAttribute(DiMethod method, bool evenDisabled = true, string nameIncludes = null)
         {
             this.Method = method;
