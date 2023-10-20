@@ -6,8 +6,8 @@ namespace Rito.CAT.Drawer
 {
     /// <summary>
     /// <para/> 2020-05-19 PM 4:48:45
-    /// <para/> ÇöÀç ¼öÄ¡ / ÃÖ´ë ¼öÄ¡¸¦ ÀÎ½ºÆåÅÍ¿¡ ¸·´ë ÇüÅÂ·Î Ç¥½Ã
-    /// <para/> * ´ë»ó : int, float, double
+    /// <para/> í˜„ì¬ ìˆ˜ì¹˜ / ìµœëŒ€ ìˆ˜ì¹˜ë¥¼ ì¸ìŠ¤í™í„°ì— ë§‰ëŒ€ í˜•íƒœë¡œ í‘œì‹œ
+    /// <para/> * ëŒ€ìƒ : int, float, double
     /// </summary>
     [CustomPropertyDrawer(typeof(ProgressBarAttribute), true)]
     public class ProgressBarAttributeDrawer : PropertyDrawer
@@ -34,7 +34,7 @@ namespace Rito.CAT.Drawer
             {
                 case SerializedPropertyType.Integer:
 
-                    // °ª ¹üÀ§ °­Á¦ Á¦ÇÑ
+                    // ê°’ ë²”ìœ„ ê°•ì œ ì œí•œ
                     if (Atr.ClampInRange)
                         property.intValue = property.intValue.Ex_Clamp((int)minValue, (int)maxValue);
                     currentValue = property.intValue;
@@ -49,25 +49,25 @@ namespace Rito.CAT.Drawer
 
                 default:
                     EditorGUI.PropertyField(propRect, property, label, true);
-                    EditorHelper.ColorErrorBox(backRect, $"[ProgressBar - Error] ¼ıÀÚ Å¸ÀÔ¿¡¸¸ »ç¿ëÇÒ ¼ö ÀÖ½À´Ï´Ù.\n´ë»ó Å¸ÀÔ : {property.type} ");
+                    EditorHelper.ColorErrorBox(backRect, $"[ProgressBar - Error] ìˆ«ì íƒ€ì…ì—ë§Œ ì‚¬ìš©í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.\nëŒ€ìƒ íƒ€ì… : {property.type} ");
                     return;
             }
 
             
-            // ¹Ù °¡·Î±æÀÌ ±¸ÇÏ±â
+            // ë°” ê°€ë¡œê¸¸ì´ êµ¬í•˜ê¸°
             float ratio = (currentValue / maxValue).Ex_Clamp(0f, 1f);
             Rect barRect = new Rect(position.x, position.y + Height, position.width * ratio, Height * 1.5f);
 
-            // ±âº» ÇÊµå ±×¸®±â
+            // ê¸°ë³¸ í•„ë“œ ê·¸ë¦¬ê¸°
             if (Atr.ClampInRange)
                 label.text = $"{label.text} [Clamped]";
             EditorGUI.PropertyField(propRect, property, label, true);
 
-            // ¹Ù ±×¸®±â
+            // ë°” ê·¸ë¦¬ê¸°
             EditorGUI.DrawRect(backRect, Color.black);
             EditorGUI.DrawRect(barRect, Atr.BarColor.Ex_Convert());
 
-            // ÅØ½ºÆ® ±×¸®±â
+            // í…ìŠ¤íŠ¸ ê·¸ë¦¬ê¸°
             var textStyle = new GUIStyle(GUI.skin.label);
             textStyle.fontStyle = FontStyle.Bold;
             textStyle.normal.textColor = Atr.TextColor.Ex_Convert();

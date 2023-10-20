@@ -1,11 +1,11 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 namespace Rito.CAT
 {
     /// <summary>
     /// <para/> 2020-05-19 PM 4:47:11
-    /// <para/> ÇöÀç ¼öÄ¡ / ÃÖ´ë ¼öÄ¡¸¦ ÀÎ½ºÆåÅÍ¿¡ ¸·´ë ÇüÅÂ·Î Ç¥½Ã
-    /// <para/> * ´ë»ó : int, float
+    /// <para/> í˜„ì¬ ìˆ˜ì¹˜ / ìµœëŒ€ ìˆ˜ì¹˜ë¥¼ ì¸ìŠ¤í™í„°ì— ë§‰ëŒ€ í˜•íƒœë¡œ í‘œì‹œ
+    /// <para/> * ëŒ€ìƒ : int, float
     /// </summary>
     [System.AttributeUsage(System.AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public class ProgressBarAttribute : PropertyAttribute
@@ -18,7 +18,7 @@ namespace Rito.CAT
 
         public EColor TextColor { get; private set; } = EColor.White;
 
-        /// <summary> °ªÀ» ¹üÀ§³»·Î °­Á¦·Î Á¦ÇÑÇÒÁö ¿©ºÎ </summary>
+        /// <summary> ê°’ì„ ë²”ìœ„ë‚´ë¡œ ê°•ì œë¡œ ì œí•œí• ì§€ ì—¬ë¶€ </summary>
         public bool ClampInRange { get; set; } = false;
 
         public ProgressBarAttribute(float maxValue)
