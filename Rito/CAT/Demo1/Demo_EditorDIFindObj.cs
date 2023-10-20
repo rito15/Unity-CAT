@@ -8,10 +8,10 @@ namespace Rito.CAT.Demo
     // 작성자 : Rito
     public class Demo_EditorDIFindObj : MonoBehaviour
     {
-        [EditorDI(DiMethod.FindObjectOfType, evenDisabled: false)]
+        [EditorDI(DiMethod.FindObjectOfType, includeInactive: false)]
         public UnityEngine.UI.Image _findObjOfType;
 
-        [EditorDI(DiMethod.FindObjectOfType, evenDisabled: true)]
+        [EditorDI(DiMethod.FindObjectOfType, includeInactive: true)]
         public UnityEngine.UI.Image _findObjOfTypeEvenDisabled;
 
     }

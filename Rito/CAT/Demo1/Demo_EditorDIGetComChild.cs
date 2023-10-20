@@ -15,10 +15,10 @@ namespace Rito.CAT.Demo
         [EditorDI(DiMethod.GetComponentInChildrenOnly, false)]
         public CapsuleCollider _getCInChildrenOnly; // 자식
 
-        [EditorDI(DiMethod.GetComponentInChildren, evenDisabled: true)]
+        [EditorDI(DiMethod.GetComponentInChildren, includeInactive: true)]
         public BoxCollider _getCInChildrenEvenDisabled; // 자식
 
-        [EditorDI(DiMethod.GetComponentInChildrenOnly, evenDisabled: true)]
+        [EditorDI(DiMethod.GetComponentInChildrenOnly, includeInactive: true)]
         public BoxCollider _getCInChildrenOnlyEvenDisabled; // 자식
     }
 }

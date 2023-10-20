@@ -177,7 +177,7 @@ namespace Rito.CAT.Drawer
             //    ComponentHelper.FindComponentInScene_NC(fieldInfo.FieldType, Atr.NameIncludes, Atr.IncludeDisabledObject);
 
             Color bg = GUI.backgroundColor;
-            GUI.backgroundColor = Atr.IncludeDisabledObject ? new Color(0.3f, 0.3f, 0.3f, 0.5f) : new Color(1f, 1f, 1f, 0.3f);
+            GUI.backgroundColor = Atr.IncludeInactive ? new Color(0.3f, 0.3f, 0.3f, 0.5f) : new Color(1f, 1f, 1f, 0.3f);
             GUI.Button(miniRect, Atr.NameIncludes == null ? IconPreviewWhite : IconPreviewCyan);
             GUI.backgroundColor = bg;
 
@@ -273,7 +273,7 @@ namespace Rito.CAT.Drawer
                 property.objectReferenceValue.GetType().Ex_IsChildOrEqualsTo(fieldType) == false;
 
             UnityEngine.Object foundTarget;
-            string includeDisabled = Atr.IncludeDisabledObject ? " (+ Disabled)" : "";
+            string includeDisabled = Atr.IncludeInactive ? " (+ Disabled)" : "";
 
             // 인젝션
             {
@@ -344,7 +344,7 @@ namespace Rito.CAT.Drawer
                     IconGreen;
 
                 Color oldCol = GUI.backgroundColor;
-                if (Atr.IncludeDisabledObject) // Disabled 포함이면 검정 버튼
+                if (Atr.IncludeInactive) // Disabled 포함이면 검정 버튼
                 {
                     GUI.backgroundColor = new Color(0.3f, 0.3f, 0.3f);
                 }
@@ -382,7 +382,7 @@ namespace Rito.CAT.Drawer
 
             Vector2 mPos =  Event.current.mousePosition;
 
-            string method = $"{Atr.Method}{(Atr.IncludeDisabledObject ? " [D]" : "")}";
+            string method = $"{Atr.Method}{(Atr.IncludeInactive ? " [D]" : "")}";
             string nameIncludes = Atr.NameIncludes;
 
             // 스트링으로 너비 계산
@@ -441,7 +441,7 @@ namespace Rito.CAT.Drawer
                 rect.x -= 1f; rect.width += 2f; rect.y -= 1f; rect.height += 2f; return rect;
             }
 
-            string method = $"{Atr.Method}{(Atr.IncludeDisabledObject ? " [D]" : "")}";
+            string method = $"{Atr.Method}{(Atr.IncludeInactive ? " [D]" : "")}";
             string nameIncludes = 
                 (string.IsNullOrEmpty(Atr.NameEquals)) ? 
                     Atr.NameIncludes : $"{Atr.NameEquals} [EQ]"

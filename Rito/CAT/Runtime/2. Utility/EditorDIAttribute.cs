@@ -16,7 +16,7 @@ namespace Rito.CAT
         /// <summary>
         /// 비활성화된 오브젝트를 모두 탐색 (기본 값: true)
         /// </summary>
-        public bool IncludeDisabledObject { get; set; }
+        public bool IncludeInactive { get; set; }
 
         /// <summary>
         /// 게임오브젝트 이름에 해당 문자열이 포함되는 경우 탐색
@@ -40,10 +40,10 @@ namespace Rito.CAT
         ////////////////////////////////////// -------- ///////////////////////////////////
 
 
-        public EditorDIAttribute(DiMethod method, bool evenDisabled = true, string nameIncludes = null)
+        public EditorDIAttribute(DiMethod method, bool includeInactive = true, string nameIncludes = null)
         {
             this.Method = method;
-            this.IncludeDisabledObject = evenDisabled;
+            this.IncludeInactive = includeInactive;
             this.NameIncludes = nameIncludes;
         }
 

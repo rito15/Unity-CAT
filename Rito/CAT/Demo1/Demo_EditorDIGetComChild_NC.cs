@@ -9,33 +9,33 @@ namespace Rito.CAT.Demo
     // 작성자 : Rito
     public class Demo_EditorDIGetComChild_NC : MonoBehaviour
     {
-        [EditorDI(DiMethod.GetComponentInChildren, nameIncludes: "NONO", evenDisabled: false)]
+        [EditorDI(DiMethod.GetComponentInChildren, nameIncludes: "NONO", includeInactive: false)]
         public CapsuleCollider _children_Fail1;
 
-        [EditorDI(DiMethod.GetComponentInChildren, nameIncludes: "DI", evenDisabled: false)]
+        [EditorDI(DiMethod.GetComponentInChildren, nameIncludes: "DI", includeInactive: false)]
         public CapsuleCollider _children_Suc1;
 
-        [EditorDI(DiMethod.GetComponentInChildrenOnly, nameIncludes: "DI", evenDisabled: false)]
+        [EditorDI(DiMethod.GetComponentInChildrenOnly, nameIncludes: "DI", includeInactive: false)]
         public CapsuleCollider _children_Fail2;
 
-        [EditorDI(DiMethod.GetComponentInChildren, nameIncludes: "Cap", evenDisabled: false)]
+        [EditorDI(DiMethod.GetComponentInChildren, nameIncludes: "Cap", includeInactive: false)]
         public CapsuleCollider _children_Suc2;
 
-        [EditorDI(DiMethod.GetComponentInChildrenOnly, nameIncludes: "Cap", evenDisabled: false)]
+        [EditorDI(DiMethod.GetComponentInChildrenOnly, nameIncludes: "Cap", includeInactive: false)]
         public CapsuleCollider _children_Suc3;
 
 
 
-        [EditorDI(DiMethod.GetComponentInChildren, nameIncludes: "DI", evenDisabled:true)]
+        [EditorDI(DiMethod.GetComponentInChildren, nameIncludes: "DI", includeInactive:true)]
         public CapsuleCollider _children_dsv_Suc1;
 
-        [EditorDI(DiMethod.GetComponentInChildrenOnly, nameIncludes: "DI", evenDisabled: true)]
+        [EditorDI(DiMethod.GetComponentInChildrenOnly, nameIncludes: "DI", includeInactive: true)]
         public CapsuleCollider _children_dsv_Fail1;
 
-        [EditorDI(DiMethod.GetComponentInChildren, nameIncludes: "Cap", evenDisabled: true)]
+        [EditorDI(DiMethod.GetComponentInChildren, nameIncludes: "Cap", includeInactive: true)]
         public CapsuleCollider _children_dsv_Suc2;
 
-        [EditorDI(DiMethod.GetComponentInChildrenOnly, nameIncludes: "Cap", evenDisabled: true)]
+        [EditorDI(DiMethod.GetComponentInChildrenOnly, nameIncludes: "Cap", includeInactive: true)]
         public CapsuleCollider _children_dsv_Suc3;
     }
 }

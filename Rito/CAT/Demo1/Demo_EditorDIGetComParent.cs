@@ -14,10 +14,10 @@ namespace Rito.CAT.Demo
         [EditorDI(DiMethod.GetComponentInParentsOnly)]
         public Light _getCInParentsOnly;
 
-        [EditorDI(DiMethod.GetComponentInParents, evenDisabled: true)]
+        [EditorDI(DiMethod.GetComponentInParents, includeInactive: true)]
         public Light _getCInParentsEvenDisabled;
 
-        [EditorDI(DiMethod.GetComponentInParentsOnly, evenDisabled: true)]
+        [EditorDI(DiMethod.GetComponentInParentsOnly, includeInactive: true)]
         public Light _getCInParentsOnlyEvenDisabled;
     }
 }

@@ -19,7 +19,7 @@ namespace Rito.CAT.Demo
         [EditorDI(ComponentType = typeof(Collider), NameEquals = "col99")]
         public GameObject go4;
 
-        [EditorDI(ComponentType = typeof(Collider), NameEquals = "col8", IncludeDisabledObject = false)]
+        [EditorDI(ComponentType = typeof(Collider), NameEquals = "col8", IncludeInactive = false)]
         public GameObject go5_fail;
 
 
@@ -28,7 +28,7 @@ namespace Rito.CAT.Demo
         public GameObject childGo1;
 
         [EditorDI(DiMethod.GetComponentInChildren,
-            ComponentType = typeof(Collider), NameEquals = "col99", IncludeDisabledObject = false)]
+            ComponentType = typeof(Collider), NameEquals = "col99", IncludeInactive = false)]
         public GameObject childGo2_fail;
 
         [EditorDI(NameEquals = "main camera")]
