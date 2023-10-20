@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
+using System.Text;
 
 namespace Rito.CAT
 {
@@ -44,6 +45,26 @@ namespace Rito.CAT
         {
             MethodName = methodName;
             Text = buttonText;
+        }
+
+        /// <summary> buttonText를 생략하는 경우 : Pascal Case 기준으로 공백 구분하여 메소드 이름 출력 </summary>
+        public MethodButtonAttribute(string methodName)
+        {
+            MethodName = methodName;
+            Text = ConvertPascalCaseToWords(methodName);
+        }
+
+        private static string ConvertPascalCaseToWords(string input)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < input.Length; i++)
+            {
+                char currentChar = input[i];
+                if (i > 0 && char.IsUpper(currentChar))
+                    sb.Append(' '); // 대문자 앞에 공백 추가
+                sb.Append(currentChar);
+            }
+            return sb.ToString();
         }
     }
 

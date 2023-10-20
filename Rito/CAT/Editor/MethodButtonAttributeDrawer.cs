@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System;
@@ -83,12 +83,13 @@ namespace Rito.CAT.Drawer
 
             string methodName = Atr.MethodName.Replace(" ", "");
 
-            var method = fieldInfo.DeclaringType.GetMethod(methodName,
+            var method = fieldInfo.DeclaringType.GetMethod (
+                methodName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static,
                 null,
                 new Type[] { },
                 null
-                );
+            );
 
             if (method == null)
             {
