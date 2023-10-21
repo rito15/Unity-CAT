@@ -58,5 +58,26 @@ private void TestMethod()
 ```
 ![image](https://github.com/rito15/Unity-CAT/assets/42164422/046cc3c3-4a72-45a9-84fd-6e47164b165a)
 
+<br>
+
+## Readonly
+- 인스펙터의 프로퍼티를 읽기 전용 상태로 표시한다.
+```cs
+[Readonly] public int intValue = 3;
+[Readonly, SerializeField] private bool boolValue = true;
+[Readonly, EditorDI(ComponentType = typeof(Camera))] public GameObject go;
+[Readonly] public List<int> intList = new List<int> { 1, 2, 3 };
+[Readonly] public CustomClass customClass = new CustomClass { a = 10, b = "string" };
+
+[System.Serializable]
+public class CustomClass
+{
+    public int a;
+    public string b;
+}
+```
+![image](https://github.com/rito15/Unity-CAT/assets/42164422/b474c181-e56e-4def-af34-39aca738b93b)
+
+
 
 
