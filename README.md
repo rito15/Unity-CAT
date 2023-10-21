@@ -35,3 +35,28 @@ public RawImage _targetBG;
 |**NameEquals** | 지정한 문자열이 이름과 일치하는 게임오브젝트들만 탐색. `NameIncludes`보다 우선 적용 (기본값 : `null`)|
 |**IgnoreCase** | `NameIncludes`, `NameEquals` 옵션에 대해 대소문자 구분하지 않고 적용 (기본값 : `true`)|
 |**ComponentType** | 애트리뷰트의 대상이 게임오브젝트 타입인 경우에만 사용. `typeof(SomeComponent)` 꼴로 지정.|
+
+<br>
+
+## MethodButton
+- 클릭 시 해당 이름의 메소드를 호출하는 버튼을 인스펙터에 그린다.
+- 필드 위에 애트리뷰트로 추가하거나, `MethodButton` 클래스 타입 필드를 사용할 수 있다.
+```cs
+// Type 1 : Attribute
+[MethodButton(nameof(TestMethod))]
+public bool _a;
+
+// Type 2 : MethodButton Class Field
+public MethodButton mb1 = nameof(TestMethod);
+public MethodButton mb2 = (nameof(TestMethod), "Custom Button Name");
+public MethodButton mb3 = (nameof(TestMethod), "Custom Button Name", 40); // + Height
+
+private void TestMethod()
+{
+    // ...
+}
+```
+![image](https://github.com/rito15/Unity-CAT/assets/42164422/046cc3c3-4a72-45a9-84fd-6e47164b165a)
+
+
+
