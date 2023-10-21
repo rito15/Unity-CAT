@@ -240,6 +240,9 @@ MonoBehaviour:
   boolValue: 1
   go: {fileID: 321473074}
   intList: 010000000200000003000000
+  customClass:
+    a: 10
+    b: string
 --- !u!4 &1292824047
 Transform:
   m_ObjectHideFlags: 0
