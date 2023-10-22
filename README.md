@@ -80,6 +80,27 @@ public class CustomClass
 
 <br>
 
+## ReadonlyIf
+- 지정한 필드의 값에 따라 인스펙터의 프로퍼티를 읽기 전용으로 만든다.
+```cs
+public bool condition = true;
+[Range(100, 101)] public int  mustBe100 = 100;
+
+[Space(12)]
+[ReadonlyIf(nameof(condition), true)]
+public int _conditionTrue = 1;
+
+[ReadonlyIf(nameof(condition), true, EQorNE:false)]
+public float _conditionFalse = 2;
+
+[ReadonlyIf(nameof(condition), true)] // OR 1
+[ReadonlyIf(nameof(mustBe100), 100)]  // OR 2
+public GameObject _conditionTrueOr100;
+```
+![2023_1022_ReadonlyIf](https://github.com/rito15/Unity-CAT/assets/42164422/4cdd37bd-6940-418f-b966-ac9d9dc01aa1)
+
+<br>
+
 ## ShowIf, HideIf
 - 지정한 필드의 값에 따라 인스펙터의 프로퍼티를 보여주거나 숨긴다.
 ```cs
