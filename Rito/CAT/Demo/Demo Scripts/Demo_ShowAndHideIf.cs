@@ -11,16 +11,21 @@ namespace Rito.CAT.Demo
     public class Demo_ShowAndHideIf : MonoBehaviour
     {
         public bool condition = true;
+        public bool condition2 = true;
 
+        [Header("[Show If]")]
         [ShowIf(nameof(condition), true)]
         public int showVal1 = 1;
 
         [ShowIf(nameof(condition), true)]
         public float showVal2 = 2;
 
-        //[ShowIf(nameof(selfShow), 100)]
-        //public int selfShow = 100;
+        [ShowIf(nameof(condition), true)]
+        [ShowIf(nameof(condition2), true)]
+        public GameObject showVal3;
 
+
+        [Header("[Hide If]")]
         [HideIf(nameof(condition), true)]
         public float hideVal1 = 456f;
 

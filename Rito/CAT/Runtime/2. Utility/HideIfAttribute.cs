@@ -6,7 +6,8 @@ namespace Rito.CAT
     /// <summary
     /// 지정한 필드 값이 지정 값과 일치하는 경우에만 프로퍼티 숨기기
     /// </summary>
-    public class HideIfAttribute : DropDownAttributeBase
+    [System.AttributeUsage(System.AttributeTargets.Field, AllowMultiple = true, Inherited = true)]
+    public class HideIfAttribute : PropertyAttribute
     {
         public string TargetField { get; set; }
         public object Value { get; set; }

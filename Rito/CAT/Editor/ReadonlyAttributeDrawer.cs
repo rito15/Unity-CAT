@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Rito.CAT.Drawer
+namespace Rito.CAT.EditorDrawer
 {
     [CustomPropertyDrawer(typeof(ReadonlyAttribute), true)]
     public class ReadonlyAttributeDrawer : PropertyDrawer

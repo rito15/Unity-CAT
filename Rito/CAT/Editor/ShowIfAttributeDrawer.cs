@@ -3,8 +3,10 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
-namespace Rito.CAT.Drawer
+namespace Rito.CAT.EditorDrawer
 {
+    using Editor;
+
     /// <summary>
     /// <para/> 2020-05-18 PM 3:29:49
     /// <para/> 
@@ -36,7 +38,8 @@ namespace Rito.CAT.Drawer
 
         private bool Predicate(SerializedProperty property)
         {
-            object targetValue = GetObjectValue(property.serializedObject.FindProperty(Atr.TargetField));
+            object targetValue = EditorSerializedObjectHelper.GetObjectValue(
+                property.serializedObject.FindProperty(Atr.TargetField));
             if (targetValue != null)
             {
                 if (Atr.Value != null)
@@ -45,39 +48,6 @@ namespace Rito.CAT.Drawer
                 }
             }
             return false;
-        }
-        private static object GetObjectValue(SerializedProperty property)
-        {
-            if (property == null)
-                return null;
-
-            switch (property.propertyType)
-            {
-                case SerializedPropertyType.Integer:
-                    return property.intValue;
-                case SerializedPropertyType.Boolean:
-                    return property.boolValue;
-                case SerializedPropertyType.Float:
-                    return property.floatValue;
-                case SerializedPropertyType.String:
-                    return property.stringValue;
-                case SerializedPropertyType.Color:
-                    return property.colorValue;
-                case SerializedPropertyType.ObjectReference:
-                    return property.objectReferenceValue;
-                case SerializedPropertyType.LayerMask:
-                    return property.intValue;
-                case SerializedPropertyType.Enum:
-                    return property.enumValueIndex;
-                case SerializedPropertyType.Vector2:
-                    return property.vector2Value;
-                case SerializedPropertyType.Vector3:
-                    return property.vector3Value;
-                case SerializedPropertyType.Vector4:
-                    return property.vector4Value;
-                default:
-                    return null;
-            }
         }
 
     }

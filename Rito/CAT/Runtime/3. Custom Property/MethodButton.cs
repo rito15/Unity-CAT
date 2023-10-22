@@ -64,7 +64,7 @@ namespace Rito.CAT
 }
 
 #if UNITY_EDITOR
-namespace Rito.CAT.Drawer
+namespace Rito.CAT.EditorDrawer
 {
     using UnityEditor;
     using System.Reflection;

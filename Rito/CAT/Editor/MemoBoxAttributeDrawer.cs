@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Rito.CAT.Drawer
+namespace Rito.CAT.EditorDrawer
 {
     // 2023. 08. 23. TODO: PropertyDrawer로 변경하여 기존 프로퍼티를 감추거나 표시할 수 있도록 수정
     

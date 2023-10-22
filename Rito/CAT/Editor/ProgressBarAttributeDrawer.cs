@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Rito.CAT.Drawer
+namespace Rito.CAT.EditorDrawer
 {
     /// <summary>
     /// <para/> 2020-05-19 PM 4:48:45
