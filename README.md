@@ -127,3 +127,22 @@ public string hideVal2 = "Hide If Condition is true";
 ```
 ![2023_1022_ShowHideIf](https://github.com/rito15/Unity-CAT/assets/42164422/fad53e88-ecf8-43af-b49d-b80a6c87c079)
 
+<br>
+
+## ColorIf
+```cs
+public bool condition1 = true;
+public bool condition2 = true;
+
+[Space(12)]
+[ColorIf(nameof(condition1), true, 2.0f, 0.5f, 0.5f)]
+public int _conditionTrue = 1;
+
+[ColorIf(nameof(condition1), false, 0.0f, 0.5f, 1.5f)]
+public float _conditionFalse = 2;
+
+[ColorIf(nameof(condition1), true, 1.0f, 0.5f, 0.5f)] // Next
+[ColorIf(nameof(condition2), true, 0.0f, 0.5f, 1.5f)] // Top priority
+public GameObject _conditionBoth;
+```
+![image](https://github.com/rito15/Unity-CAT/assets/42164422/1f4ae340-babf-4235-bd46-e11c56473533)
