@@ -17,7 +17,7 @@ namespace Rito.CAT.Demo
         [ReadonlyIf(nameof(condition), true)]
         public int _conditionTrue = 1;
 
-        [ReadonlyIf(nameof(condition), true, false)]
+        [ReadonlyIf(nameof(condition), true, EQorNE:false)]
         public float _conditionFalse = 2;
 
         [ReadonlyIf(nameof(condition), true)] // OR 1

@@ -248,11 +248,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 284510604}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47ce29ba74455674297db697f14a0dce, type: 3}
+  m_Script: {fileID: 11500000, guid: 71d79ac6de422894dabf1ec88f4f6b6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   condition: 1
-  showVal1: 1
-  showVal2: 2
-  hideVal1: 456
-  hideVal2: Hide If Condition is true
+  mustBe100: 100
+  _conditionTrue: 1
+  _conditionFalse: 2
+  _conditionTrueOr100: {fileID: 0}
