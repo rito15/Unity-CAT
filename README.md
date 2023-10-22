@@ -78,6 +78,31 @@ public class CustomClass
 ```
 ![image](https://github.com/rito15/Unity-CAT/assets/42164422/b474c181-e56e-4def-af34-39aca738b93b)
 
+<br>
 
+## ShowIf, HideIf
+- 지정한 필드의 값에 따라 인스펙터의 프로퍼티를 보여주거나 숨긴다.
+```cs
+public bool condition = true;
+public bool condition2 = true;
 
+[Header("[Show If]")]
+[ShowIf(nameof(condition), true)]
+public int showVal1 = 1;
+
+[ShowIf(nameof(condition), true)]
+public float showVal2 = 2;
+
+[ShowIf(nameof(condition), true)]   // And 1
+[ShowIf(nameof(condition2), true)]  // And 2
+public GameObject showVal3;
+
+[Header("[Hide If]")]
+[HideIf(nameof(condition), true)]
+public float hideVal1 = 456f;
+
+[HideIf(nameof(condition), true)]
+public string hideVal2 = "Hide If Condition is true";
+```
+![2023_1022_ShowHideIf](https://github.com/rito15/Unity-CAT/assets/42164422/fad53e88-ecf8-43af-b49d-b80a6c87c079)
 
