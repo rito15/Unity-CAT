@@ -12,19 +12,8 @@ namespace Rito.CAT.EditorDrawer
     /// <para/> 
     /// </summary>
     [CustomPropertyDrawer(typeof(ShowIfAttribute), true)]
-    public class ShowIfAttributeDrawer : PropertyDrawer
+    public class ShowIfAttributeDrawer : RitoPropertyDrawer<ShowIfAttribute>
     {
-        ShowIfAttribute Atr
-        {
-            get
-            {
-                if (_atr == null)
-                    _atr = attribute as ShowIfAttribute;
-                return _atr;
-            }
-        }
-        ShowIfAttribute _atr;
-
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             return Predicate(property) ? EditorGUI.GetPropertyHeight(property, label, true) : 0f;
