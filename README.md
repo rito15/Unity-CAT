@@ -1,5 +1,6 @@
 # Unity CAT
 - Unity Custom ATtributes
+- `2023.3.21f1 (LTS)`
 - UPM
 ```
 https://github.com/rito15/Unity-CAT.git
