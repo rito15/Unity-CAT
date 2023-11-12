@@ -93,6 +93,18 @@ namespace Rito.CAT.EditorDrawer
                 null
             );
 
+            // 베이스 타입에서 탐색
+            if (method == null && fieldInfo.DeclaringType.BaseType != null)
+            {
+                method = fieldInfo.DeclaringType.BaseType.GetMethod (
+                    methodName,
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static,
+                    null,
+                    new Type[] { },
+                    null
+                );
+            }
+
             position.height = buttonHeight;
 
             if (GUI.Button(position, buttonText))
